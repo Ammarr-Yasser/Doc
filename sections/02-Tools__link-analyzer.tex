@@ -3,6 +3,8 @@ The Link Analyzer evaluates a submitted URL and returns a risk-oriented result. 
 
 This tool matters for social engineering defense because malicious campaigns often start with a URL. Early link triage helps users and analysts block phishing pages, malware delivery links, and impersonation attempts before account or device compromise.
 
+Some UI screenshots in this chapter reflect earlier prototype naming; in this report the tool is referred to as Link Analyzer.
+
 \begin{table}[H]
   \centering
   \caption{Link Analyzer API Endpoints}
@@ -98,7 +100,7 @@ This tool matters for social engineering defense because malicious campaigns oft
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview.png}
-  \caption{Link Analyzer: External intelligence inputs and resulting tool output indicators in the system architecture context.}
+  \caption{Link Analyzer: External intelligence inputs and resulting tool output indicators in the system architecture context. Diagram contains legacy prototype labels; the final scope of this report excludes email tooling.}
   \label{fig:link-analyzer-threat-indicators-output}
 \end{figure}
 \FloatBarrier
@@ -186,7 +188,7 @@ This tool matters for social engineering defense because malicious campaigns oft
 \begin{itemize}
 \item Monitor scan failures, timeout rates, and risk-level distributions.
 \item Monitor tool counter growth for usage and abuse patterns.
-\item Troubleshooting steps: verify API keys, check upstream service status, inspect validation failures, and review history entries.
+\item Troubleshooting steps: check API keys, check upstream service status, inspect validation failures, and review history entries.
 \end{itemize}
 
 \subsection{Audit Trail and History Logging}

@@ -51,7 +51,7 @@
 \item
   Public key endpoint has explicit origin allowlist for local dev.
 \item
-  Global CORS allows all origins (\texttt{*}) for other routes (verify if this is desired for production).
+  Global CORS allows all origins (\texttt{*}) for other routes. This setting is development-friendly and should be restricted in production deployments.
 \end{itemize}
 
 \hypertarget{file-handling}{%
@@ -139,7 +139,7 @@ All inputs are validated server-side, including:
 \item
   File uploads
 \item
-  Email identifiers
+  User identifiers
 \item
   Credential inputs
 \end{itemize}
@@ -179,7 +179,7 @@ The backend enforces:
 \item
   No plaintext credential storage
 \item
-  No raw email persistence
+  No raw URL/file content persistence beyond necessary metadata
 \item
   No file execution
 \item
