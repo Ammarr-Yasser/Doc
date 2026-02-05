@@ -32,8 +32,8 @@ This tool matters for social engineering defense because file-based lures are co
 \textbf{Inputs}
 \begin{itemize}
 \item Multipart file field is required.
-\item File size limits are enforced, exact thresholds TBD (verify in code).
-\item Allowed/restricted file types list: TBD (verify in code).
+\item File size limits are enforced, exact thresholds Not evidenced in the reviewed codebase.
+\item Allowed/restricted file types list: Not evidenced in the reviewed codebase.
 \item Filename normalization and sanitization are applied.
 \end{itemize}
 
@@ -42,7 +42,7 @@ This tool matters for social engineering defense because file-based lures are co
 \item File metadata (name, extension, MIME type).
 \item Hash and static indicators (including entropy and type-specific signals where available).
 \item Risk result with score, level, and reasons.
-\item Exact response schema and optional fields: TBD (verify in code).
+\item Exact response schema and optional fields: Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \begin{figure}[H]
@@ -100,29 +100,29 @@ This tool matters for social engineering defense because file-based lures are co
 \begin{itemize}
 \item Invalid or missing file input is rejected immediately.
 \item Unsupported file states return controlled error output.
-\item External reputation API failure behavior: TBD (verify in code).
-\item Temporary file cleanup failure handling: TBD (verify in code).
+\item External reputation API failure behavior: Not evidenced in the reviewed codebase.
+\item Temporary file cleanup failure handling: Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \textbf{Logging and audit}
 \begin{itemize}
 \item History and tool counter are updated per request.
 \item Full file content should not be logged.
-\item Logged metadata fields are deployment-dependent: TBD (verify in code).
+\item Logged metadata fields are deployment-dependent: Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \section{Detection Logic}
 \begin{itemize}
 \item Indicators include MIME/extension consistency, entropy signals, static suspicious patterns, and reputation verdicts.
 \item Hash-based lookup contributes known-malicious or unknown status context.
-\item Scoring appears rule-based with thresholds; exact weighting and cutoffs are TBD (verify in code).
+\item Scoring appears rule-based with thresholds; exact weighting and cutoffs are Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \section{Security and Abuse Resistance}
 \begin{itemize}
 \item Input hardening checks file presence, size, and sanitized names.
 \item Files are analyzed statically and are not executed.
-\item Abuse controls such as rate limits and per-user quotas: TBD (verify in code).
+\item Abuse controls such as rate limits and per-user quotas: Not evidenced in the reviewed codebase.
 \item Tool counters support anomaly tracking.
 \end{itemize}
 

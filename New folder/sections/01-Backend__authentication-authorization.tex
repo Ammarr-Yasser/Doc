@@ -1,0 +1,263 @@
+\hypertarget{authentication-and-authorization}{%
+\subsection{Authentication and Authorization}\label{sec:01-Backend__authentication-authorization:authentication-and-authorization}}
+
+\hypertarget{credential-encryption}{%
+\subsubsection{Credential Encryption}\label{sec:01-Backend__authentication-authorization:credential-encryption}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend encrypts \texttt{username}, \texttt{email}, and \texttt{password} with RSA.
+\item
+  Public key is fetched from \texttt{/api/auth/public-key}.
+\item
+  Backend decrypts fields via \texttt{backend/app/security.py} before processing.
+\end{itemize}
+
+\hypertarget{signup}{%
+\subsubsection{Signup}\label{sec:01-Backend__authentication-authorization:signup}}
+
+\begin{itemize}
+\tightlist
+\item
+  Endpoint: \texttt{POST\ /api/auth/signup}.
+\item
+  Validates required fields and uniqueness of \texttt{username} and \texttt{email}.
+\item
+  Stores hashed password (\texttt{werkzeug.security.generate\_password\_hash}).
+\end{itemize}
+
+\hypertarget{login}{%
+\subsubsection{Login}\label{sec:01-Backend__authentication-authorization:login}}
+
+\begin{itemize}
+\tightlist
+\item
+  Endpoint: \texttt{POST\ /api/auth/login}.
+\item
+  Enforces account suspension after three failed attempts (\texttt{User.record\_failed\_login}).
+\item
+  Issues JWT access and refresh tokens with explicit expiry.
+\item
+  Stores refresh token JTI in the \texttt{RefreshToken} table.
+\end{itemize}
+
+\hypertarget{refresh}{%
+\subsubsection{Refresh}\label{sec:01-Backend__authentication-authorization:refresh}}
+
+\begin{itemize}
+\tightlist
+\item
+  Endpoint: \texttt{POST\ /api/auth/refresh} (requires refresh token).
+\item
+  Validates existing refresh token, checks expiry, revokes old token, and issues rotated access + refresh tokens.
+\end{itemize}
+
+\hypertarget{logout}{%
+\subsubsection{Logout}\label{sec:01-Backend__authentication-authorization:logout}}
+
+\begin{itemize}
+\tightlist
+\item
+  Endpoint: \texttt{POST\ /api/auth/logout} (requires refresh token).
+\item
+  Revokes the supplied refresh token.
+\end{itemize}
+
+\hypertarget{logout-all}{%
+\subsubsection{Logout All}\label{sec:01-Backend__authentication-authorization:logout-all}}
+
+\begin{itemize}
+\tightlist
+\item
+  Endpoint: \texttt{POST\ /api/auth/logout-all}.
+\item
+  Revokes all active refresh tokens for the user.
+\end{itemize}
+
+\hypertarget{authorization-model}{%
+\subsubsection{Authorization Model}\label{sec:01-Backend__authentication-authorization:authorization-model}}
+
+\begin{itemize}
+\tightlist
+\item
+  Role stored in JWT claims (\texttt{role}).
+\item
+  \texttt{require\_admin()} enforces admin-only access to protected routes.
+\item
+  Admin CRUD operations have additional constraints (master admin restrictions in \texttt{backend/app/user.py}).
+\end{itemize}
+
+\hypertarget{frontend-session-handling}{%
+\subsubsection{Frontend Session Handling}\label{sec:01-Backend__authentication-authorization:frontend-session-handling}}
+
+\begin{itemize}
+\tightlist
+\item
+  Access and refresh tokens are stored in \texttt{localStorage}.
+\item
+  Client token-refresh middleware renews expired access tokens and updates both tokens on rotation.
+\item
+  Admin route access is based on stored user role in \texttt{localStorage}.
+\end{itemize}
+
+\hypertarget{authentication-and-authorization-1}{%
+\subsection{Authentication and Authorization}\label{sec:01-Backend__authentication-authorization:authentication-and-authorization-1}}
+
+\hypertarget{overview}{%
+\subsubsection{Overview}\label{sec:01-Backend__authentication-authorization:overview}}
+
+DefendX uses a \textbf{token-based authentication model} built on JSON Web Tokens (JWT), combined with role-based authorization controls.
+
+Authentication and authorization are enforced \textbf{before any security tool logic executes}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{token-types}{%
+\subsubsection{Token Types}\label{sec:01-Backend__authentication-authorization:token-types}}
+
+\hypertarget{access-token}{%
+\paragraph{Access Token}\label{sec:01-Backend__authentication-authorization:access-token}}
+
+\begin{itemize}
+\tightlist
+\item
+  Short-lived
+\item
+  Sent in the \texttt{Authorization:\ Bearer\ \textless{}token\textgreater{}} header
+\item
+  Used for all authenticated API requests
+\item
+  Not stored server-side
+\end{itemize}
+
+\hypertarget{refresh-token}{%
+\paragraph{Refresh Token}\label{sec:01-Backend__authentication-authorization:refresh-token}}
+
+\begin{itemize}
+\tightlist
+\item
+  Long-lived
+\item
+  Stored in the database
+\item
+  Used to obtain new access tokens
+\item
+  Explicitly validated and revocable
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{authentication-flow}{%
+\subsubsection{Authentication Flow}\label{sec:01-Backend__authentication-authorization:authentication-flow}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User submits credentials
+\item
+  Backend validates credentials
+\item
+  Backend issues:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Access token
+  \item
+    Refresh token
+  \end{itemize}
+\item
+  Frontend stores and uses access token
+\item
+  Refresh token used only for token renewal
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{refresh-token-validation}{%
+\subsubsection{Refresh Token Validation}\label{sec:01-Backend__authentication-authorization:refresh-token-validation}}
+
+On refresh requests:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Token is decoded
+\item
+  Token identifier is checked against the database
+\item
+  Expired or revoked tokens are rejected
+\item
+  New access token is issued
+\end{enumerate}
+
+Refresh tokens are \textbf{validated server-side}, unlike access tokens.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{authorization-rbac}{%
+\subsubsection{Authorization (RBAC)}\label{sec:01-Backend__authentication-authorization:authorization-rbac}}
+
+Certain endpoints require elevated privileges.
+
+\hypertarget{role-based-access-control}{%
+\paragraph{Role-Based Access Control}\label{sec:01-Backend__authentication-authorization:role-based-access-control}}
+
+\begin{itemize}
+\tightlist
+\item
+  User roles are embedded in JWT claims
+\item
+  Decorators enforce required roles
+\item
+  Authorization checks occur before route execution
+\end{itemize}
+
+Example use cases:
+
+\begin{itemize}
+\tightlist
+\item
+  Administrative actions
+\item
+  User management
+\item
+  System-level operations
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{security-properties}{%
+\subsubsection{Security Properties}\label{sec:01-Backend__authentication-authorization:security-properties}}
+
+The authentication system ensures:
+
+\begin{itemize}
+\tightlist
+\item
+  Stateless access validation
+\item
+  Server-controlled session longevity
+\item
+  Explicit privilege enforcement
+\item
+  Clear separation of identity sources
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{known-constraints}{%
+\subsubsection{Known Constraints}\label{sec:01-Backend__authentication-authorization:known-constraints}}
+
+\begin{itemize}
+\tightlist
+\item
+  Access tokens are not blocklisted
+\item
+  Refresh tokens are not automatically rotated
+\end{itemize}
+
+These constraints are documented and accepted as part of the design.

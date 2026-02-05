@@ -1,0 +1,77 @@
+\hypertarget{security-whitepaper}{%
+\subsection{Security Whitepaper}\label{sec:99-Executive__security-whitepaper:security-whitepaper}}
+
+\hypertarget{abstract}{%
+\subsubsection{Abstract}\label{sec:99-Executive__security-whitepaper:abstract}}
+
+DefendX is a multi-tool cybersecurity platform designed to analyze social engineering threats through a unified API and dashboard. It integrates static and dynamic analysis methods, reputation checks, and structured scoring to support defensive decision-making.
+
+\hypertarget{system-architecture}{%
+\subsubsection{System Architecture}\label{sec:99-Executive__security-whitepaper:system-architecture}}
+
+\begin{itemize}
+\tightlist
+\item
+  Flask API with REST namespaces under \texttt{/api}.
+\item
+  React/Vite SPA for interactive tool workflows.
+\item
+  SQLAlchemy models for identity, logging, and token state.
+\item
+  Optional Celery workers for asynchronous tasks.
+\end{itemize}
+
+\hypertarget{security-design}{%
+\subsubsection{Security Design}\label{sec:99-Executive__security-whitepaper:security-design}}
+
+\begin{itemize}
+\tightlist
+\item
+  Credential encryption: RSA public key retrieval and client-side encryption.
+\item
+  Authentication: JWT access tokens and rotated refresh tokens stored server-side.
+\item
+  Authorization: Admin role enforced on privileged endpoints.
+\item
+  Request hardening: traversal and file marker blocking for static assets.
+\item
+  SSRF mitigation: Link Analyzer validates public HTTP targets.
+\end{itemize}
+
+\hypertarget{tool-capabilities}{%
+\subsubsection{Tool Capabilities}\label{sec:99-Executive__security-whitepaper:tool-capabilities}}
+
+\begin{itemize}
+\tightlist
+\item
+  Link Analyzer: reputation checks, SSL inspection, redirect analysis, and optional dynamic analysis.
+\item
+  File Download Checker: static analysis and VirusTotal hash reputation.
+\end{itemize}
+
+\hypertarget{data-handling}{%
+\subsubsection{Data Handling}\label{sec:99-Executive__security-whitepaper:data-handling}}
+
+\begin{itemize}
+\tightlist
+\item
+  Access tokens stored client-side; refresh tokens rotated and tracked server-side.
+\end{itemize}
+
+\hypertarget{limitations}{%
+\subsubsection{Limitations}\label{sec:99-Executive__security-whitepaper:limitations}}
+
+\begin{itemize}
+\tightlist
+\item
+  No explicit rate limiting or abuse controls in code.
+\item
+  Production configuration and storage hardening are TBD.
+\item
+  Some frontend tool pages do not have verified backend support.
+\end{itemize}
+
+\hypertarget{conclusion}{%
+\subsubsection{Conclusion}\label{sec:99-Executive__security-whitepaper:conclusion}}
+
+DefendX provides a strong security foundation for social-engineering detection, but it requires additional production hardening, monitoring, and feature alignment to meet enterprise requirements.

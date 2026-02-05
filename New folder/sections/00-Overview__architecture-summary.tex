@@ -1,0 +1,194 @@
+\hypertarget{architecture-summary}{%
+\subsection{Architecture Summary}\label{sec:00-Overview__architecture-summary:architecture-summary}}
+
+\hypertarget{system-overview}{%
+\subsubsection{System Overview}\label{sec:00-Overview__architecture-summary:system-overview}}
+
+DefendX uses a layered architecture with strict separation of concerns:
+
+\begin{itemize}
+\tightlist
+\item
+  Presentation layer (Frontend)
+\item
+  Security decision layer (Backend)
+\item
+  External intelligence providers
+\item
+  Persistent storage
+\end{itemize}
+
+\hypertarget{high-level-components}{%
+\subsubsection{High-Level Components}\label{sec:00-Overview__architecture-summary:high-level-components}}
+
+\begin{itemize}
+\tightlist
+\item
+  Backend API: Flask + Flask-RESTX with a single API prefix \texttt{/api} and docs at \texttt{/api/docs}.
+\item
+  Frontend: React/Vite SPA proxied to \texttt{/api} during development and optionally served from \texttt{frontend/dist} or \texttt{frontend/build} in production.
+\item
+  Data Store: SQLAlchemy models backed by SQLite for \texttt{dev.db} and \texttt{test.db} (production database is deployment-dependent and configured by the operator).
+\item
+  Async Tasks: Celery worker factory wired to Flask config (\texttt{CELERY\_BROKER\_URL}, \texttt{CELERY\_RESULT\_BACKEND}).
+\end{itemize}
+
+\hypertarget{frontend}{%
+\paragraph{Frontend}\label{sec:00-Overview__architecture-summary:frontend}}
+
+\begin{itemize}
+\tightlist
+\item
+  Single-page application
+\item
+  Handles user interaction
+\item
+  No security authority
+\end{itemize}
+
+\hypertarget{backend}{%
+\paragraph{Backend}\label{sec:00-Overview__architecture-summary:backend}}
+
+\begin{itemize}
+\tightlist
+\item
+  Flask-based API
+\item
+  Central security engine
+\item
+  Authentication and authorization
+\item
+  Tool orchestration
+\item
+  Risk scoring
+\end{itemize}
+
+\hypertarget{database}{%
+\paragraph{Database}\label{sec:00-Overview__architecture-summary:database}}
+
+\begin{itemize}
+\tightlist
+\item
+  Stores users
+\item
+  Stores history (audit logs)
+\item
+  Stores tool usage counters
+\end{itemize}
+
+\hypertarget{external-services}{%
+\paragraph{External Services}\label{sec:00-Overview__architecture-summary:external-services}}
+
+\begin{itemize}
+\tightlist
+\item
+  Reputation APIs
+\item
+  Intelligence feeds
+\end{itemize}
+
+\hypertarget{backend-entry-points}{%
+\subsubsection{Backend Entry Points}\label{sec:00-Overview__architecture-summary:backend-entry-points}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{backend/app/main.py} creates the Flask app via \texttt{create\_app(devconfig)} and registers all namespaces.
+\item
+  \texttt{backend/app/\_\_init\_\_.py} performs request hardening and serves the SPA when a static build is present.
+\end{itemize}
+
+\hypertarget{api-namespaces}{%
+\subsubsection{API Namespaces}\label{sec:00-Overview__architecture-summary:api-namespaces}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{auth}: signup, login, refresh, logout, public-key.
+\item
+  \texttt{user}: admin CRUD and user detail endpoints.
+\item
+  \texttt{history}: admin and user tool history.
+\item
+  \texttt{tool\_counter}: per-user and global usage counters.
+\item
+  \texttt{tools/link-analyzer}: quick, deep, and custom scans.
+\item
+  \texttt{tools/file-checker}: file upload scanning.
+\item
+  \texttt{celery}: start and status for a demo task.
+\end{itemize}
+
+\hypertarget{trust-boundaries}{%
+\subsubsection{Trust Boundaries}\label{sec:00-Overview__architecture-summary:trust-boundaries}}
+
+\begin{itemize}
+\tightlist
+\item
+  Browser clients communicate with the API via JWT-protected endpoints.
+\item
+  Tool analyzers call out to external reputational APIs and services.
+\end{itemize}
+
+\hypertarget{static-web-serving}{%
+\subsubsection{Static Web Serving}\label{sec:00-Overview__architecture-summary:static-web-serving}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend build artifacts are served by Flask if \texttt{frontend/dist} or \texttt{frontend/build} exists.
+\item
+  Request hardening blocks path traversal and source file access (e.g., \texttt{.env}, \texttt{.py}, \texttt{.jsx}).
+\end{itemize}
+
+\hypertarget{data-flow}{%
+\subsubsection{Data Flow}\label{sec:00-Overview__architecture-summary:data-flow}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User submits input via frontend
+\item
+  Frontend sends request to backend API
+\item
+  Backend validates authentication and input
+\item
+  Security tool executes
+\item
+  Risk score computed
+\item
+  History and counters updated
+\item
+  Result returned to frontend
+\end{enumerate}
+
+\hypertarget{design-constraints}{%
+\subsubsection{Design Constraints}\label{sec:00-Overview__architecture-summary:design-constraints}}
+
+\begin{itemize}
+\tightlist
+\item
+  No direct frontend access to databases
+\item
+  No frontend access to external intelligence services
+\item
+  All trust decisions server-side
+\item
+  Minimal data retention
+\end{itemize}
+
+\hypertarget{architectural-benefits}{%
+\subsubsection{Architectural Benefits}\label{sec:00-Overview__architecture-summary:architectural-benefits}}
+
+\begin{itemize}
+\tightlist
+\item
+  Strong auditability
+\item
+  Clear trust boundaries
+\item
+  Easier security review
+\item
+  Modular extensibility
+\end{itemize}

@@ -1,0 +1,199 @@
+\section{Overview}
+The Link Analyzer evaluates a submitted URL and returns a risk-oriented result. The tool combines URL checks, reputation lookups, and optional deeper inspection paths to estimate whether a link is likely safe or suspicious.
+
+This tool matters for social engineering defense because malicious campaigns often start with a URL. Early link triage helps users and analysts block phishing pages, malware delivery links, and impersonation attempts before account or device compromise.
+
+\begin{table}[H]
+  \centering
+  \caption{Link Analyzer API Endpoints}
+  \begin{tabular}{|l|p{0.62\textwidth}|}
+    \hline
+    \textbf{Endpoint} & \textbf{Description} \\ \hline
+    \texttt{POST /quick-scan} & Fast URL inspection \\ \hline
+    \texttt{POST /deep-scan} & Deeper URL inspection with enrichment \\ \hline
+    \texttt{POST /custom-scan} & Custom scan options \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-authentication-jwt-sequence.png}
+  \caption{Authentication workflow and JWT-protected request sequence for Link Analyzer execution.}
+  \label{fig:link-analyzer-request-response-flow}
+\end{figure}
+\FloatBarrier
+
+\section{Scope and Assumptions}
+\begin{itemize}
+\item Supported input is a URL in request payload. Scan modes include quick, deep, and custom paths.
+\item Out of scope: full browser sandboxing guarantees, user education workflow, and policy enforcement outside this API tool.
+\item Trust boundaries: user input is untrusted; external intelligence services are semi-trusted; internal scoring logic is trusted system code.
+\end{itemize}
+
+\section{Inputs and Outputs}
+\textbf{Inputs}
+\begin{itemize}
+\item URL field: required, non-empty.
+\item Scheme expected: HTTP/HTTPS.
+\item URL normalization details: Not evidenced in the reviewed codebase.
+\item Size and payload limits for request body: Not evidenced in the reviewed codebase.
+\item Custom scan option accepts selected checks list.
+\end{itemize}
+
+\textbf{Outputs}
+\begin{itemize}
+\item Risk object with score, level, and reasons.
+\item Check-level details (domain/reputation/redirect/SSL and optional deep checks).
+\item Indicator flags and metadata fields: exact schema Not evidenced in the reviewed codebase.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-link-analyzer-input.png}
+  \caption{Link Analyzer user interface (URL input and scan modes). UI label reflects an earlier prototype name; in this report it is referred to as Link Analyzer.}
+  \label{fig:link-analyzer-ui-input}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-link-analyzer-custom-scan-options.png}
+  \caption{Link Analyzer custom scan configuration interface with selectable inspection options.}
+  \label{fig:link-analyzer-ui-custom-scan}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-link-analyzer-result-low.png}
+  \caption{Link Analyzer result interface showing a low-risk classification.}
+  \label{fig:link-analyzer-ui-low}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-link-analyzer-result-review.png}
+  \caption{Link Analyzer result interface showing a needs-review classification.}
+  \label{fig:link-analyzer-ui-review}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-link-analyzer-result-high.png}
+  \caption{Link Analyzer result interface showing a high-risk classification.}
+  \label{fig:link-analyzer-ui-high}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-backend-processing-pipeline.png}
+  \caption{Link Analyzer: Redirect and Reputation Pipeline}
+  \label{fig:link-analyzer-redirect-reputation-pipeline}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview.png}
+  \caption{Link Analyzer: External intelligence inputs and resulting tool output indicators in the system architecture context.}
+  \label{fig:link-analyzer-threat-indicators-output}
+\end{figure}
+\FloatBarrier
+
+\section{Processing Pipeline}
+\begin{enumerate}
+\item Accept and validate URL request.
+\item Apply target safety checks before outbound processing.
+\item Execute selected checks (quick, deep, or custom path).
+\item Collect check outputs and compute aggregate risk.
+\item Return structured response and record tool usage.
+\end{enumerate}
+
+\textbf{Error handling behavior}
+\begin{itemize}
+\item Invalid input is rejected before analysis.
+\item External API timeout or failure handling policy: Not evidenced in the reviewed codebase.
+\item Missing data from one check is handled conservatively in scoring.
+\end{itemize}
+
+\textbf{Logging and audit}
+\begin{itemize}
+\item History entries and tool counters are updated per scan.
+\item Sensitive payload retention policy details: Not evidenced in the reviewed codebase.
+\item Authentication secrets are not expected in this tool input.
+\end{itemize}
+
+\section{Detection Logic}
+\begin{itemize}
+\item Indicators include domain age, redirect behavior, SSL status, IP/geolocation context, and reputation signals.
+\item Optional deep checks include dynamic behavior, favicon signals, and brand mismatch indicators.
+\item Score combination logic is rule-based/weighted in practice, but exact weights and thresholds are Not evidenced in the reviewed codebase.
+\end{itemize}
+
+\section{Security and Abuse Resistance}
+\begin{itemize}
+\item Input is validated and normalized before processing.
+\item URL target filtering is used to reduce SSRF exposure, including private/loopback target rejection.
+\item Rate limiting and abuse controls at gateway/API level: Not evidenced in the reviewed codebase.
+\item Tool usage counters support abuse monitoring.
+\end{itemize}
+
+\section{Privacy Considerations}
+\begin{itemize}
+\item Tool accepts URL input and returns analysis output.
+\item Stored versus transient fields in history are deployment-dependent: Not evidenced in the reviewed codebase.
+\item Token handling relies on platform authentication layer, not this tool-specific logic.
+\end{itemize}
+
+\section{Limitations}
+\begin{itemize}
+\item Results depend on external service availability and quality.
+\item Dynamic checks may not cover all evasive behavior.
+\item SSRF protections are hostname/target-rule based and require strict maintenance.
+\item Risk score is an analyst aid, not proof of compromise.
+\end{itemize}
+
+\section{Test Plan (Scalable)}
+\textbf{Unit tests}
+\begin{itemize}
+\item URL parser and validator edge cases.
+\item Score calculation for isolated indicator combinations.
+\item Check selector behavior for custom scan mode.
+\end{itemize}
+
+\textbf{Integration tests}
+\begin{itemize}
+\item End-to-end API response structure for each scan mode.
+\item External API success/failure fallback behavior.
+\end{itemize}
+
+\textbf{Adversarial tests}
+\begin{itemize}
+\item Redirect chains, homograph-like domains, and suspicious TLS setups.
+\item Known phishing URLs and benign controls.
+\end{itemize}
+
+\textbf{Performance tests}
+\begin{itemize}
+\item Latency by scan mode.
+\item Timeout behavior under upstream API delays.
+\end{itemize}
+
+\section{Operational Notes}
+\begin{itemize}
+\item Monitor scan failures, timeout rates, and risk-level distributions.
+\item Monitor tool counter growth for usage and abuse patterns.
+\item Troubleshooting steps: verify API keys, check upstream service status, inspect validation failures, and review history entries.
+\end{itemize}
+
+\subsection{Audit Trail and History Logging}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/history-link-analyzer-filter.png}
+  \caption{Audit trail showing historical Link Analyzer executions filtered by tool.}
+  \label{fig:history-link-analyzer}
+\end{figure}
+\FloatBarrier

@@ -63,17 +63,17 @@
   File upload analysis writes to OS temp directory and removes files after analysis.
 \end{itemize}
 
-\hypertarget{security-gaps-tbd}{%
-\subsubsection{Security Gaps (TBD)}\label{sec:01-Backend__security-hardening:security-gaps-tbd}}
+\hypertarget{security-gaps}{%
+\subsubsection{Security Gaps}\label{sec:01-Backend__security-hardening:security-gaps}}
 
 \begin{itemize}
 \tightlist
 \item
-  Rate limiting and abuse prevention are not evident in code (TBD (verify in code)).
+  Rate limiting and abuse prevention are not evident in code (Not evidenced in the reviewed codebase).
 \item
-  CSRF protection and secure cookie strategy are not used because tokens are stored in \texttt{localStorage} (risk: XSS). TBD (verify in code).
+  CSRF protection and secure cookie strategy are not used because tokens are stored in \texttt{localStorage} (risk: XSS). Not evidenced in the reviewed codebase.
 \item
-  Production TLS termination and WAF configuration are not defined in code (TBD (verify in code)).
+  Production TLS termination and WAF configuration are not defined in code (Not evidenced in the reviewed codebase).
 \end{itemize}
 
 \hypertarget{backend-security-hardening}{%

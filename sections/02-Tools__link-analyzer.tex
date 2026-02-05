@@ -35,8 +35,8 @@ This tool matters for social engineering defense because malicious campaigns oft
 \begin{itemize}
 \item URL field: required, non-empty.
 \item Scheme expected: HTTP/HTTPS.
-\item URL normalization details: TBD (verify in code).
-\item Size and payload limits for request body: TBD (verify in code).
+\item URL normalization details: Not evidenced in the reviewed codebase.
+\item Size and payload limits for request body: Not evidenced in the reviewed codebase.
 \item Custom scan option accepts selected checks list.
 \end{itemize}
 
@@ -44,7 +44,7 @@ This tool matters for social engineering defense because malicious campaigns oft
 \begin{itemize}
 \item Risk object with score, level, and reasons.
 \item Check-level details (domain/reputation/redirect/SSL and optional deep checks).
-\item Indicator flags and metadata fields: exact schema TBD (verify in code).
+\item Indicator flags and metadata fields: exact schema Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \begin{figure}[H]
@@ -115,14 +115,14 @@ This tool matters for social engineering defense because malicious campaigns oft
 \textbf{Error handling behavior}
 \begin{itemize}
 \item Invalid input is rejected before analysis.
-\item External API timeout or failure handling policy: TBD (verify in code).
+\item External API timeout or failure handling policy: Not evidenced in the reviewed codebase.
 \item Missing data from one check is handled conservatively in scoring.
 \end{itemize}
 
 \textbf{Logging and audit}
 \begin{itemize}
 \item History entries and tool counters are updated per scan.
-\item Sensitive payload retention policy details: TBD (verify in code).
+\item Sensitive payload retention policy details: Not evidenced in the reviewed codebase.
 \item Authentication secrets are not expected in this tool input.
 \end{itemize}
 
@@ -130,21 +130,21 @@ This tool matters for social engineering defense because malicious campaigns oft
 \begin{itemize}
 \item Indicators include domain age, redirect behavior, SSL status, IP/geolocation context, and reputation signals.
 \item Optional deep checks include dynamic behavior, favicon signals, and brand mismatch indicators.
-\item Score combination logic is rule-based/weighted in practice, but exact weights and thresholds are TBD (verify in code).
+\item Score combination logic is rule-based/weighted in practice, but exact weights and thresholds are Not evidenced in the reviewed codebase.
 \end{itemize}
 
 \section{Security and Abuse Resistance}
 \begin{itemize}
 \item Input is validated and normalized before processing.
 \item URL target filtering is used to reduce SSRF exposure, including private/loopback target rejection.
-\item Rate limiting and abuse controls at gateway/API level: TBD (verify in code).
+\item Rate limiting and abuse controls at gateway/API level: Not evidenced in the reviewed codebase.
 \item Tool usage counters support abuse monitoring.
 \end{itemize}
 
 \section{Privacy Considerations}
 \begin{itemize}
 \item Tool accepts URL input and returns analysis output.
-\item Stored versus transient fields in history are deployment-dependent: TBD (verify in code).
+\item Stored versus transient fields in history are deployment-dependent: Not evidenced in the reviewed codebase.
 \item Token handling relies on platform authentication layer, not this tool-specific logic.
 \end{itemize}
 

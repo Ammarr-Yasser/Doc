@@ -1,0 +1,196 @@
+\hypertarget{project-overview}{%
+\subsection{Project Overview}\label{sec:00-Overview__project-overview:project-overview}}
+
+DefendX is a web-based security analysis platform focused on protecting users from social engineering attacks through a Flask API and a React/Vite dashboard. The system provides the URL Risk Analysis Tool (Link Analyzer), file download scanning, and operational logging.
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{sec:00-Overview__project-overview:purpose}}
+
+DefendX is a security analysis platform designed to identify and assess risks introduced through explicit user inputs, including:
+
+\begin{itemize}
+\tightlist
+\item
+  URLs
+\item
+  Files
+\end{itemize}
+
+The platform provides explainable risk assessments, auditability, and actionable guidance without executing untrusted content.
+All analysis tools in DefendX operate exclusively on explicit user input and do not perform background monitoring, credential harvesting, or passive data collection.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{core-objectives}{%
+\subsubsection{Core Objectives}\label{sec:00-Overview__project-overview:core-objectives}}
+
+DefendX is designed to:
+
+\begin{itemize}
+\tightlist
+\item
+  Detect common and advanced threat indicators
+\item
+  Provide transparent and explainable risk scores
+\item
+  Preserve user privacy
+\item
+  Maintain strong auditability
+\item
+  Operate safely under partial failure
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{what-defendx-is}{%
+\subsubsection{What DefendX Is}\label{sec:00-Overview__project-overview:what-defendx-is}}
+
+\begin{itemize}
+\tightlist
+\item
+  A centralized security analysis engine
+\item
+  A backend-driven trust decision system
+\item
+  A modular tool-based architecture
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{what-defendx-is-not}{%
+\subsubsection{What DefendX Is Not}\label{sec:00-Overview__project-overview:what-defendx-is-not}}
+
+\begin{itemize}
+\tightlist
+\item
+  An antivirus engine
+\item
+  A sandbox execution platform (by default)
+\item
+  A replacement for endpoint security
+\item
+  A real-time intrusion prevention system
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{security-philosophy}{%
+\subsubsection{Security Philosophy}\label{sec:00-Overview__project-overview:security-philosophy}}
+
+DefendX follows these principles:
+
+\begin{itemize}
+\tightlist
+\item
+  Assume all external input is malicious
+\item
+  Treat the frontend as untrusted
+\item
+  Prefer false positives over false negatives
+\item
+  Fail safely and visibly
+\item
+  Avoid black-box decisions
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{high-level-capabilities}{%
+\subsubsection{High-Level Capabilities}\label{sec:00-Overview__project-overview:high-level-capabilities}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Capability & Description \\
+\midrule
+\endhead
+URL Risk Analysis & URL reputation, redirects, SSL, and optional dynamic checks \\
+File Analysis & Static file inspection and reputation \\
+\bottomrule
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{trust-model}{%
+\subsubsection{Trust Model}\label{sec:00-Overview__project-overview:trust-model}}
+
+\begin{itemize}
+\tightlist
+\item
+  Backend: trusted
+\item
+  Frontend: untrusted
+\item
+  External services: untrusted but useful
+\item
+  User input: hostile by default
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{system-boundary}{%
+\subsubsection{System Boundary}\label{sec:00-Overview__project-overview:system-boundary}}
+
+DefendX makes security decisions server-side and returns results to clients. It does not execute untrusted content or take autonomous remediation actions.
+
+\hypertarget{scope}{%
+\subsubsection{Scope}\label{sec:00-Overview__project-overview:scope}}
+
+\begin{itemize}
+\tightlist
+\item
+  Backend API serving authenticated tool endpoints under \texttt{/api}.
+\item
+  Frontend SPA that drives authenticated workflows and reports.
+\item
+  User-invoked URL and file analysis workflows through authenticated API requests.
+\end{itemize}
+
+\hypertarget{primary-data-flows}{%
+\subsubsection{Primary Data Flows}\label{sec:00-Overview__project-overview:primary-data-flows}}
+
+\begin{itemize}
+\tightlist
+\item
+  Users authenticate via \texttt{/api/auth/login} with RSA-encrypted credential fields.
+\item
+  Backend issues JWT access and refresh tokens and stores refresh token state in the database.
+\item
+  Tool endpoints process user inputs, compute risk scores, and log usage in \texttt{History} and \texttt{Tool\_Counter} tables.
+\item
+  Frontend displays findings, status, and usage history from the API.
+\end{itemize}
+
+\hypertarget{data-classes}{%
+\subsubsection{Data Classes}\label{sec:00-Overview__project-overview:data-classes}}
+
+\begin{itemize}
+\tightlist
+\item
+  Account data: \texttt{User} (username, email, role, suspended flags).
+\item
+  Auth data: JWT access and refresh tokens, refresh token server-side records.
+\item
+  Tool data: user-provided URLs, file metadata, and tool outputs.
+\item
+  Logs: tool usage history and per-user counters.
+\end{itemize}
+
+\hypertarget{external-dependencies}{%
+\subsubsection{External Dependencies}\label{sec:00-Overview__project-overview:external-dependencies}}
+
+\begin{itemize}
+\tightlist
+\item
+  VirusTotal, Google Safe Browsing, and IPGeolocation (API-backed checks).
+\item
+  Playwright for optional dynamic link analysis.
+\end{itemize}
+
+\hypertarget{out-of-scope}{%
+\subsubsection{Out of Scope}\label{sec:00-Overview__project-overview:out-of-scope}}
+
+\begin{itemize}
+\tightlist
+\item
+  Backend APIs for tools present only in frontend routes (USB, PCAP, Audio, User Behavior) are not confirmed in this repository. See \texttt{00-Overview/known-limitations.md}.
+\end{itemize}

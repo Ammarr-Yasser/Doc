@@ -1,0 +1,294 @@
+\hypertarget{frontend-architecture}{%
+\subsection{Frontend Architecture}\label{sec:04-Frontend__frontend-architecture:frontend-architecture}}
+
+\hypertarget{framework}{%
+\subsubsection{Framework}\label{sec:04-Frontend__frontend-architecture:framework}}
+
+\begin{itemize}
+\tightlist
+\item
+  React SPA built with Vite.
+\item
+  Routing is managed with React Router (\texttt{frontend/src/router/AppRouter.jsx}).
+\end{itemize}
+
+\hypertarget{app-layout-and-routing}{%
+\subsubsection{App Layout and Routing}\label{sec:04-Frontend__frontend-architecture:app-layout-and-routing}}
+
+\begin{itemize}
+\tightlist
+\item
+  Public routes: \texttt{/} (login), \texttt{/register}.
+\item
+  Protected routes: \texttt{/home}, \texttt{/profile}, \texttt{/history}, tool pages, and documentation pages.
+\item
+  Admin routes: \texttt{/admins} (enforced via \texttt{AdminRoute}).
+\end{itemize}
+
+\hypertarget{api-client}{%
+\subsubsection{API Client}\label{sec:04-Frontend__frontend-architecture:api-client}}
+
+\begin{itemize}
+\tightlist
+\item
+  Axios instance configured with base URL from \texttt{VITE\_API\_URL} or \texttt{/api} by default.
+\item
+  Request middleware attaches access token from \texttt{localStorage}.
+\item
+  Response middleware refreshes access token via \texttt{/api/auth/refresh} and retries once.
+\end{itemize}
+
+\hypertarget{tool-pages}{%
+\subsubsection{Tool Pages}\label{sec:04-Frontend__frontend-architecture:tool-pages}}
+
+\begin{itemize}
+\tightlist
+\item
+  Link Analyzer and File Download Checker.
+\item
+  Additional tool pages exist (USB, PCAP, Audio, Behavioral Risk) but backend APIs are not confirmed in this repo. Not evidenced in the reviewed codebase.
+\end{itemize}
+
+\hypertarget{state-and-storage}{%
+\subsubsection{State and Storage}\label{sec:04-Frontend__frontend-architecture:state-and-storage}}
+
+\begin{itemize}
+\tightlist
+\item
+  Tokens and user profile are stored in \texttt{localStorage}.
+\item
+  Admin role checks are derived from locally stored user payload.
+\end{itemize}
+
+\hypertarget{code-alignment-notes}{%
+\subsubsection{Code Alignment Notes}\label{sec:04-Frontend__frontend-architecture:code-alignment-notes}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{/tools/user-behavior/analyze} is referenced in \texttt{frontend/src/api/index.js}, but no backend endpoint was found. Not evidenced in the reviewed codebase.
+\end{itemize}
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{sec:04-Frontend__frontend-architecture:purpose}}
+
+The DefendX frontend is the \textbf{user-facing interaction layer} of the platform. Its role is to collect user input, invoke backend APIs, and present security results in a clear and actionable manner.
+
+The frontend does \textbf{not} make security decisions and is treated as an untrusted component.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{architectural-role}{%
+\subsubsection{Architectural Role}\label{sec:04-Frontend__frontend-architecture:architectural-role}}
+
+Within the overall system, the frontend acts as:
+
+\begin{itemize}
+\tightlist
+\item
+  A presentation layer
+\item
+  A request orchestrator
+\item
+  A visualization and UX layer
+\end{itemize}
+
+All security logic, validation, and risk assessment occur in the backend.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{high-level-structure}{%
+\subsubsection{High-Level Structure}\label{sec:04-Frontend__frontend-architecture:high-level-structure}}
+
+The frontend is implemented as a \textbf{single-page application (SPA)} with:
+
+\begin{itemize}
+\tightlist
+\item
+  Component-based UI
+\item
+  Client-side routing
+\item
+  Centralized API client
+\item
+  Token-aware request handling
+\end{itemize}
+
+It communicates with the backend exclusively over HTTPS.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{api-communication-model}{%
+\subsubsection{API Communication Model}\label{sec:04-Frontend__frontend-architecture:api-communication-model}}
+
+\hypertarget{centralized-api-client}{%
+\paragraph{Centralized API Client}\label{sec:04-Frontend__frontend-architecture:centralized-api-client}}
+
+The frontend uses a centralized API client responsible for:
+
+\begin{itemize}
+\tightlist
+\item
+  Attaching the \texttt{Authorization:\ Bearer\ \textless{}access\_token\textgreater{}} header
+\item
+  Normalizing error handling
+\item
+  Triggering token refresh logic when needed
+\item
+  Retrying failed requests after refresh
+\end{itemize}
+
+This prevents duplicated authentication logic across components.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{authentication-flow-client-perspective}{%
+\subsubsection{Authentication Flow (Client Perspective)}\label{sec:04-Frontend__frontend-architecture:authentication-flow-client-perspective}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User submits login credentials
+\item
+  Frontend sends credentials to backend authentication endpoint
+\item
+  Backend returns access and refresh tokens
+\item
+  Frontend stores access token and begins authenticated requests
+\end{enumerate}
+
+The frontend treats authentication failures as session state changes.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{tool-interaction-flows}{%
+\subsubsection{Tool Interaction Flows}\label{sec:04-Frontend__frontend-architecture:tool-interaction-flows}}
+
+\hypertarget{link-analyzer}{%
+\paragraph{Link Analyzer}\label{sec:04-Frontend__frontend-architecture:link-analyzer}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User enters a URL
+\item
+  Frontend performs basic format validation
+\item
+  Backend Quick Scan is invoked
+\item
+  Results are rendered
+\item
+  User may optionally trigger Deep or Custom scans
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{file-download-checker}{%
+\paragraph{File Download Checker}\label{sec:04-Frontend__frontend-architecture:file-download-checker}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User uploads a file
+\item
+  Frontend checks file size limits
+\item
+  File sent to backend
+\item
+  Backend returns hash and risk verdict
+\item
+  Frontend clearly labels unsafe files
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{history-view}{%
+\subsubsection{History View}\label{sec:04-Frontend__frontend-architecture:history-view}}
+
+The frontend retrieves history entries to display:
+
+\begin{itemize}
+\tightlist
+\item
+  Tool used
+\item
+  Timestamp
+\item
+  Risk outcome
+\end{itemize}
+
+This allows users to review past security checks.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{error-handling-strategy}{%
+\subsubsection{Error Handling Strategy}\label{sec:04-Frontend__frontend-architecture:error-handling-strategy}}
+
+The frontend categorizes errors as:
+
+\begin{itemize}
+\tightlist
+\item
+  Validation errors (user-correctable)
+\item
+  Authentication errors (session-related)
+\item
+  Tool failures (external dependency issues)
+\item
+  System errors (unexpected)
+\end{itemize}
+
+Errors are shown explicitly without hiding risk.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{build-and-serve-models}{%
+\subsubsection{Build and Serve Models}\label{sec:04-Frontend__frontend-architecture:build-and-serve-models}}
+
+Two supported deployment models:
+
+\hypertarget{separate-deployment}{%
+\paragraph{Separate Deployment}\label{sec:04-Frontend__frontend-architecture:separate-deployment}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend hosted independently
+\item
+  Backend exposed as API service
+\end{itemize}
+
+\hypertarget{backend-served-static-assets}{%
+\paragraph{Backend-Served Static Assets}\label{sec:04-Frontend__frontend-architecture:backend-served-static-assets}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend built into static files
+\item
+  Backend serves SPA with fallback routing
+\end{itemize}
+
+Both models preserve identical security behavior.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{frontend-guarantees}{%
+\subsubsection{Frontend Guarantees}\label{sec:04-Frontend__frontend-architecture:frontend-guarantees}}
+
+The frontend guarantees:
+
+\begin{itemize}
+\tightlist
+\item
+  No security decisions
+\item
+  No secret storage beyond tokens
+\item
+  No direct external API calls
+\item
+  Clear representation of backend results
+\end{itemize}

@@ -28,7 +28,7 @@ DefendX uses a layered architecture with strict separation of concerns:
 \item
   Frontend: React/Vite SPA proxied to \texttt{/api} during development and optionally served from \texttt{frontend/dist} or \texttt{frontend/build} in production.
 \item
-  Data Store: SQLAlchemy models backed by SQLite for \texttt{dev.db} and \texttt{test.db} (production database is TBD).
+  Data Store: SQLAlchemy models backed by SQLite for \texttt{dev.db} and \texttt{test.db} (production database is deployment-dependent and configured by the operator).
 \item
   Async Tasks: Celery worker factory wired to Flask config (\texttt{CELERY\_BROKER\_URL}, \texttt{CELERY\_RESULT\_BACKEND}).
 \end{itemize}

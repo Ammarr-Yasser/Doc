@@ -4,13 +4,13 @@
 \begin{itemize}
 \tightlist
 \item
-  Tool coverage mismatch: Frontend routes exist for USB Analyzer, PCAP Analyzer, Audio Analyzer, and Behavioral Risk Analyzer, but corresponding backend APIs were not found in this repository. Marked as TBD (verify in code).
+  Tool coverage mismatch: Frontend routes exist for USB Analyzer, PCAP Analyzer, Audio Analyzer, and Behavioral Risk Analyzer, but corresponding backend APIs were not found in this repository. Marked as Not evidenced in the reviewed codebase.
 \item
-  No explicit rate limiting: No rate limit or throttling middleware is present in the backend code (TBD (verify in code)).
+  No explicit rate limiting: No rate limit or throttling middleware is present in the backend code (Not evidenced in the reviewed codebase).
 \item
-  Production configuration: \texttt{prodconfig} is empty in \texttt{backend/config.py}. Production DB settings and secrets are TBD (verify in code).
+  Production configuration: \texttt{prodconfig} is empty in \texttt{backend/config.py}. Production DB settings and secrets are Not evidenced in the reviewed codebase.
 \item
-  Playwright dependency: Link Analyzer deep/custom scans rely on Playwright. If Playwright is not installed or reachable, dynamic analysis may fail or be skipped (TBD (verify in code)).
+  Playwright dependency: Link Analyzer deep/custom scans rely on Playwright. If Playwright is not installed or reachable, dynamic analysis may fail or be skipped (Not evidenced in the reviewed codebase).
 \item
   SQLite dev/test: Default configs are SQLite for development and testing, which is not suitable for production workload.
 \item
@@ -23,9 +23,9 @@
 \begin{itemize}
 \tightlist
 \item
-  \texttt{frontend/src/api/axios.js} defaults to \texttt{/api} base URL, while root README mentions \texttt{VITE\_API\_URL} defaulting to \texttt{http://localhost:5000/api}. Actual default is relative \texttt{/api} (TBD: confirm intended behavior).
+  \texttt{frontend/src/api/axios.js} defaults to \texttt{/api} base URL, while root README mentions \texttt{VITE\_API\_URL} defaulting to \texttt{http://localhost:5000/api}. Actual default is relative \texttt{/api} (Not evidenced in the reviewed codebase; confirm intended behavior).
 \item
-  \texttt{frontend/src/api/index.js} references \texttt{/tools/user-behavior/analyze}, but no backend endpoint was found (TBD (verify in code)).
+  \texttt{frontend/src/api/index.js} references \texttt{/tools/user-behavior/analyze}, but no backend endpoint was found (Not evidenced in the reviewed codebase).
 \end{itemize}
 
 \hypertarget{static-file-analysis-only}{%

@@ -1,0 +1,80 @@
+\hypertarget{audit-readiness-checklist}{%
+\subsection{Audit Readiness Checklist}\label{sec:99-Executive__audit-readiness-checklist:audit-readiness-checklist}}
+
+\hypertarget{identity-and-access}{%
+\subsubsection{Identity and Access}\label{sec:99-Executive__audit-readiness-checklist:identity-and-access}}
+
+\begin{itemize}
+\tightlist
+\item
+  JWT access and refresh tokens implemented.
+\item
+  Admin role enforcement via \texttt{require\_admin()}.
+\item
+  Account lockout after three failed login attempts.
+\end{itemize}
+
+\hypertarget{data-protection}{%
+\subsubsection{Data Protection}\label{sec:99-Executive__audit-readiness-checklist:data-protection}}
+
+\begin{itemize}
+\tightlist
+\item
+  RSA encryption of credential fields in the client.
+\item
+  Backend decryption and secure key management (file-based or env-based).
+\end{itemize}
+
+\hypertarget{logging-and-monitoring}{%
+\subsubsection{Logging and Monitoring}\label{sec:99-Executive__audit-readiness-checklist:logging-and-monitoring}}
+
+\begin{itemize}
+\tightlist
+\item
+  Tool usage logs captured in \texttt{History}.
+\item
+  Usage counters tracked in \texttt{Tool\_Counter}.
+\item
+  No centralized logging framework configured (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{secure-development}{%
+\subsubsection{Secure Development}\label{sec:99-Executive__audit-readiness-checklist:secure-development}}
+
+\begin{itemize}
+\tightlist
+\item
+  Request hardening for static file paths.
+\item
+  Input validation via Flask-RESTX models for tool endpoints.
+\end{itemize}
+
+\hypertarget{infrastructure}{%
+\subsubsection{Infrastructure}\label{sec:99-Executive__audit-readiness-checklist:infrastructure}}
+
+\begin{itemize}
+\tightlist
+\item
+  SQLite used for dev/test. Production DB config TBD.
+\item
+  Celery integration present; broker/backends must be configured.
+\end{itemize}
+
+\hypertarget{evidence-locations}{%
+\subsubsection{Evidence Locations}\label{sec:99-Executive__audit-readiness-checklist:evidence-locations}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{backend/app/auth.py}
+\item
+  \texttt{backend/app/security.py}
+\item
+  \texttt{backend/app/history.py}
+\item
+  \texttt{backend/app/toolcount.py}
+\item
+  \texttt{backend/app/\_\_init\_\_.py}
+\item
+  \texttt{backend/Tools/*}
+\end{itemize}
