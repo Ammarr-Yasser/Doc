@@ -1,0 +1,232 @@
+\hypertarget{production-deployment}{%
+\subsection{Production Deployment}\label{sec:05-Deployment__production-deployment:production-deployment}}
+
+\hypertarget{build-and-serve}{%
+\subsubsection{Build and Serve}\label{sec:05-Deployment__production-deployment:build-and-serve}}
+
+\begin{itemize}
+\tightlist
+\item
+  Build SPA: \texttt{npm\ -\/-prefix\ frontend\ run\ build}.
+\item
+  Backend serves \texttt{frontend/dist} or \texttt{frontend/build} if present.
+\item
+  Use a WSGI server (for example gunicorn or waitress) instead of Flask dev server. TBD (verify in code).
+\end{itemize}
+
+\hypertarget{network-and-security}{%
+\subsubsection{Network and Security}\label{sec:05-Deployment__production-deployment:network-and-security}}
+
+\begin{itemize}
+\tightlist
+\item
+  Terminate TLS in front of Flask.
+\item
+  Do not expose Vite dev server in production.
+\item
+  Ensure \texttt{/api} routes are only available over HTTPS.
+\end{itemize}
+
+\hypertarget{database}{%
+\subsubsection{Database}\label{sec:05-Deployment__production-deployment:database}}
+
+\begin{itemize}
+\tightlist
+\item
+  Replace SQLite with a production-grade database (PostgreSQL, MySQL). TBD (verify in code).
+\item
+  Configure migration strategy and backup plans.
+\end{itemize}
+
+\hypertarget{secrets}{%
+\subsubsection{Secrets}\label{sec:05-Deployment__production-deployment:secrets}}
+
+\begin{itemize}
+\tightlist
+\item
+  Configure all secrets and API keys via environment variables.
+\item
+  Never commit secrets or \texttt{.env} values.
+\end{itemize}
+
+\hypertarget{operational-considerations}{%
+\subsubsection{Operational Considerations}\label{sec:05-Deployment__production-deployment:operational-considerations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Validate Playwright runtime availability for deep scans, or disable deep scan in production if sandboxing is not ready (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{sec:05-Deployment__production-deployment:purpose}}
+
+This document describes considerations and best practices for deploying DefendX in a \textbf{production environment}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{production-principles}{%
+\subsubsection{Production Principles}\label{sec:05-Deployment__production-deployment:production-principles}}
+
+Production deployments must prioritize:
+
+\begin{itemize}
+\tightlist
+\item
+  Security
+\item
+  Reliability
+\item
+  Auditability
+\item
+  Observability
+\end{itemize}
+
+Development shortcuts must not be carried into production.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{deployment-models}{%
+\subsubsection{Deployment Models}\label{sec:05-Deployment__production-deployment:deployment-models}}
+
+\hypertarget{backend-and-frontend-together}{%
+\paragraph{Backend and Frontend Together}\label{sec:05-Deployment__production-deployment:backend-and-frontend-together}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend built into static assets
+\item
+  Backend serves frontend and API
+\item
+  Simpler operational model
+\item
+  Suitable for smaller deployments
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{backend-and-frontend-separate}{%
+\paragraph{Backend and Frontend Separate}\label{sec:05-Deployment__production-deployment:backend-and-frontend-separate}}
+
+\begin{itemize}
+\tightlist
+\item
+  Frontend hosted independently
+\item
+  Backend exposed as API service
+\item
+  Better scalability and isolation
+\item
+  Recommended for production-grade deployments
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{network-security}{%
+\subsubsection{Network Security}\label{sec:05-Deployment__production-deployment:network-security}}
+
+Production environments should enforce:
+
+\begin{itemize}
+\tightlist
+\item
+  HTTPS everywhere
+\item
+  Restricted inbound ports
+\item
+  Firewall rules limiting access
+\item
+  Outbound egress controls to mitigate SSRF
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{secret-management}{%
+\subsubsection{Secret Management}\label{sec:05-Deployment__production-deployment:secret-management}}
+
+\begin{itemize}
+\tightlist
+\item
+  Use secure secret managers where possible
+\item
+  Rotate secrets periodically
+\item
+  Avoid manual secret distribution
+\item
+  Restrict access to secret storage
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{database-operations}{%
+\subsubsection{Database Operations}\label{sec:05-Deployment__production-deployment:database-operations}}
+
+Production databases should include:
+
+\begin{itemize}
+\tightlist
+\item
+  Automated backups
+\item
+  Encryption at rest
+\item
+  Access controls
+\item
+  Monitoring for growth and performance
+\end{itemize}
+
+History and audit data should be treated as durable records.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{external-dependencies}{%
+\subsubsection{External Dependencies}\label{sec:05-Deployment__production-deployment:external-dependencies}}
+
+\begin{itemize}
+\tightlist
+\item
+  Monitor availability of intelligence providers
+\item
+  Track API usage and costs
+\item
+  Prepare for partial outages
+\end{itemize}
+
+External failures must not cause unsafe success states.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{upgrade-strategy}{%
+\subsubsection{Upgrade Strategy}\label{sec:05-Deployment__production-deployment:upgrade-strategy}}
+
+\begin{itemize}
+\tightlist
+\item
+  Apply schema migrations carefully
+\item
+  Test upgrades in staging environments
+\item
+  Roll out changes incrementally
+\item
+  Monitor for regressions
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{production-readiness-checklist}{%
+\subsubsection{Production Readiness Checklist}\label{sec:05-Deployment__production-deployment:production-readiness-checklist}}
+
+\begin{itemize}
+\tightlist
+\item
+  Debug disabled
+\item
+  Secrets injected securely
+\item
+  HTTPS enforced
+\item
+  Monitoring enabled
+\item
+  Backups verified
+\end{itemize}

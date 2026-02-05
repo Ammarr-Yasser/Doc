@@ -1,0 +1,53 @@
+\hypertarget{future-work}{%
+\subsection{Future Work}\label{sec:00-Overview__future-work:future-work}}
+
+\begin{itemize}
+\tightlist
+\item
+  Implement backend APIs for tools present in the frontend only (USB, PCAP, Audio, Behavioral Risk). TBD (verify in code).
+\item
+  Add API rate limiting, request quotas, and abuse detection. TBD (verify in code).
+\item
+  Provide production configuration (\texttt{prodconfig}) with secure database, secret management, and TLS guidance. TBD (verify in code).
+\item
+  Harden token storage and client-side security (for example XSS protection strategy). TBD (verify in code).
+\item
+  Expand audit logs with request metadata, tool inputs, and admin actions where appropriate. TBD (verify in code).
+\item
+  Formalize Playwright sandboxing and resource limits for dynamic scans. TBD (verify in code).
+\end{itemize}
+
+\hypertarget{stronger-ssrf-protections}{%
+\subsubsection{Stronger SSRF Protections}\label{sec:00-Overview__future-work:stronger-ssrf-protections}}
+
+Resolve hostnames and block private IP ranges.
+
+\hypertarget{dynamic-file-analysis}{%
+\subsubsection{Dynamic File Analysis}\label{sec:00-Overview__future-work:dynamic-file-analysis}}
+
+Optional sandbox-based execution.
+
+\hypertarget{enhanced-url-scoring}{%
+\subsubsection{Enhanced URL Signal Scoring}\label{sec:00-Overview__future-work:enhanced-url-scoring}}
+
+Expanded URL signal normalization and weighting.
+
+\hypertarget{expanded-reputation-coverage}{%
+\subsubsection{Expanded Reputation Coverage}\label{sec:00-Overview__future-work:expanded-reputation-coverage}}
+
+Additional defensive reputation data sources for URL and file analysis.
+
+\hypertarget{configurable-risk-scoring}{%
+\subsubsection{Configurable Risk Scoring}\label{sec:00-Overview__future-work:configurable-risk-scoring}}
+
+Externalized scoring weights.
+
+\hypertarget{native-metrics}{%
+\subsubsection{Native Metrics}\label{sec:00-Overview__future-work:native-metrics}}
+
+Tool latency and error metrics.
+
+\hypertarget{api-versioning}{%
+\subsubsection{API Versioning}\label{sec:00-Overview__future-work:api-versioning}}
+
+Introduce versioned endpoints.

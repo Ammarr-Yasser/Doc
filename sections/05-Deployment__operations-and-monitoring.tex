@@ -1,0 +1,208 @@
+\hypertarget{operations-and-monitoring}{%
+\subsection{Operations and Monitoring}\label{sec:05-Deployment__operations-and-monitoring:operations-and-monitoring}}
+
+\hypertarget{observability}{%
+\subsubsection{Observability}\label{sec:05-Deployment__operations-and-monitoring:observability}}
+
+\begin{itemize}
+\tightlist
+\item
+  No explicit logging or metrics framework is configured in code (TBD (verify in code)).
+\item
+  Consider adding structured logging and request tracing for API endpoints.
+\end{itemize}
+
+\hypertarget{health-and-status}{%
+\subsubsection{Health and Status}\label{sec:05-Deployment__operations-and-monitoring:health-and-status}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{GET\ /api/user/hello} is a lightweight health check.
+\item
+  \texttt{GET\ /api/auth/public-key} can also validate cryptographic readiness.
+\end{itemize}
+
+\hypertarget{alerting}{%
+\subsubsection{Alerting}\label{sec:05-Deployment__operations-and-monitoring:alerting}}
+
+\begin{itemize}
+\tightlist
+\item
+  No alerting rules are configured in code (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{backups}{%
+\subsubsection{Backups}\label{sec:05-Deployment__operations-and-monitoring:backups}}
+
+\begin{itemize}
+\tightlist
+\item
+  Backup strategy for database is not defined in code (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{incident-response}{%
+\subsubsection{Incident Response}\label{sec:05-Deployment__operations-and-monitoring:incident-response}}
+
+\begin{itemize}
+\tightlist
+\item
+  No incident response automation is defined in code (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{sec:05-Deployment__operations-and-monitoring:purpose}}
+
+This document describes how to \textbf{operate, monitor, and maintain} DefendX once deployed.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{logging}{%
+\subsubsection{Logging}\label{sec:05-Deployment__operations-and-monitoring:logging}}
+
+DefendX should log:
+
+\begin{itemize}
+\tightlist
+\item
+  Authentication events
+\item
+  Tool execution events
+\item
+  Errors and failures
+\end{itemize}
+
+Logs must not contain:
+
+\begin{itemize}
+\tightlist
+\item
+  Plaintext credentials
+\item
+  Tokens
+\item
+  File contents
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{monitoring}{%
+\subsubsection{Monitoring}\label{sec:05-Deployment__operations-and-monitoring:monitoring}}
+
+Recommended monitoring signals include:
+
+\begin{itemize}
+\tightlist
+\item
+  Tool execution counts
+\item
+  Error rates per tool
+\item
+  External API failure rates
+\item
+  Authentication failures
+\end{itemize}
+
+Monitoring supports:
+
+\begin{itemize}
+\tightlist
+\item
+  Incident response
+\item
+  Capacity planning
+\item
+  Abuse detection
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{alerting-1}{%
+\subsubsection{Alerting}\label{sec:05-Deployment__operations-and-monitoring:alerting-1}}
+
+Alerts should be configured for:
+
+\begin{itemize}
+\tightlist
+\item
+  Sudden spikes in tool usage
+\item
+  Repeated authentication failures
+\item
+  External intelligence API outages
+\item
+  Database errors or unavailability
+\end{itemize}
+
+Alerts should be actionable and not overly noisy.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{failure-handling}{%
+\subsubsection{Failure Handling}\label{sec:05-Deployment__operations-and-monitoring:failure-handling}}
+
+DefendX is designed to fail safely:
+
+\begin{itemize}
+\tightlist
+\item
+  External API failures increase risk
+\item
+  Partial results returned explicitly
+\item
+  Observability failures do not block analysis
+\end{itemize}
+
+Operators should investigate repeated partial failures.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{maintenance-activities}{%
+\subsubsection{Maintenance Activities}\label{sec:05-Deployment__operations-and-monitoring:maintenance-activities}}
+
+Regular maintenance should include:
+
+\begin{itemize}
+\tightlist
+\item
+  Reviewing audit logs
+\item
+  Rotating secrets
+\item
+  Updating dependencies
+\item
+  Reviewing risk scoring assumptions
+\item
+  Cleaning up old data if retention policies exist
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{incident-response-1}{%
+\subsubsection{Incident Response}\label{sec:05-Deployment__operations-and-monitoring:incident-response-1}}
+
+In case of suspected compromise:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Review audit history
+\item
+  Rotate affected secrets
+\item
+  Revoke tokens if necessary
+\item
+  Investigate anomalous usage
+\item
+  Document findings and remediation
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{operational-philosophy}{%
+\subsubsection{Operational Philosophy}\label{sec:05-Deployment__operations-and-monitoring:operational-philosophy}}
+
+DefendX should be operated as a \textbf{security system}, not just an application.
+
+Transparency, caution, and auditability are more important than silent availability.

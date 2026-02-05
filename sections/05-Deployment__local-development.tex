@@ -1,0 +1,185 @@
+\hypertarget{local-development}{%
+\subsection{Local Development}\label{sec:05-Deployment__local-development:local-development}}
+
+\hypertarget{backend}{%
+\subsubsection{Backend}\label{sec:05-Deployment__local-development:backend}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cd}\NormalTok{ backend}
+\NormalTok{python }\OperatorTok{{-}}\NormalTok{m venv }\OperatorTok{.}\FunctionTok{venv}
+\OperatorTok{.}\NormalTok{\textbackslash{}}\OperatorTok{.}\FunctionTok{venv}\NormalTok{\textbackslash{}Scripts\textbackslash{}activate}
+\NormalTok{pip install }\OperatorTok{{-}}\NormalTok{r requirements}\OperatorTok{.}\FunctionTok{txt}  \CommentTok{\# }\AlertTok{TBD}\CommentTok{ (verify in repo)}
+\NormalTok{python }\OperatorTok{{-}}\NormalTok{m app}\OperatorTok{.}\FunctionTok{main}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  API base: \texttt{http://localhost:5000/api}
+\item
+  API docs: \texttt{http://localhost:5000/api/docs}
+\end{itemize}
+
+\hypertarget{frontend}{%
+\subsubsection{Frontend}\label{sec:05-Deployment__local-development:frontend}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cd}\NormalTok{ frontend}
+\NormalTok{npm install}
+\NormalTok{npm run dev}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Default frontend: \texttt{http://localhost:5173}
+\item
+  Dev proxy to \texttt{/api} configured in \texttt{frontend/vite.config.js}.
+\end{itemize}
+
+\hypertarget{celery-optional}{%
+\subsubsection{Celery (Optional)}\label{sec:05-Deployment__local-development:celery-optional}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{celery }\OperatorTok{{-}}\NormalTok{A backend}\OperatorTok{.}\FunctionTok{celery}\OperatorTok{.}\FunctionTok{celery}\NormalTok{ worker }\OperatorTok{{-}{-}}\NormalTok{loglevel}\OperatorTok{=}\NormalTok{info}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{notes}{%
+\subsubsection{Notes}\label{sec:05-Deployment__local-development:notes}}
+
+\begin{itemize}
+\tightlist
+\item
+  SQLite databases \texttt{backend/dev.db} and \texttt{backend/test.db} are used by default.
+\end{itemize}
+
+\hypertarget{purpose}{%
+\subsubsection{Purpose}\label{sec:05-Deployment__local-development:purpose}}
+
+This document describes how to run DefendX in a \textbf{local development environment} for testing, debugging, and development.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{development-characteristics}{%
+\subsubsection{Development Characteristics}\label{sec:05-Deployment__local-development:development-characteristics}}
+
+Local development environments typically enable:
+
+\begin{itemize}
+\tightlist
+\item
+  Debug logging
+\item
+  Local databases
+\item
+  Relaxed CORS rules
+\item
+  Faster iteration cycles
+\end{itemize}
+
+These settings must not be used in production.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{backend-setup-local}{%
+\subsubsection{Backend Setup (Local)}\label{sec:05-Deployment__local-development:backend-setup-local}}
+
+Typical local workflow:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create and activate a virtual environment
+\item
+  Install backend dependencies
+\item
+  Set required environment variables
+\item
+  Initialize the database
+\item
+  Start the backend server
+\end{enumerate}
+
+The backend exposes:
+
+\begin{itemize}
+\tightlist
+\item
+  API endpoints under \texttt{/api}
+\item
+  Swagger documentation under \texttt{/docs}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{frontend-setup-local}{%
+\subsubsection{Frontend Setup (Local)}\label{sec:05-Deployment__local-development:frontend-setup-local}}
+
+Typical frontend workflow:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Install frontend dependencies
+\item
+  Configure API base URL
+\item
+  Start the development server
+\item
+  Interact with the backend API
+\end{enumerate}
+
+Frontend and backend usually run on separate ports during development.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{testing-tools-locally}{%
+\subsubsection{Testing Tools Locally}\label{sec:05-Deployment__local-development:testing-tools-locally}}
+
+\begin{itemize}
+\tightlist
+\item
+  Use benign test URLs and files
+\item
+  Avoid submitting sensitive personal data
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{common-development-pitfalls}{%
+\subsubsection{Common Development Pitfalls}\label{sec:05-Deployment__local-development:common-development-pitfalls}}
+
+\begin{itemize}
+\tightlist
+\item
+  Missing environment variables
+\item
+  CORS misconfiguration
+\item
+  External API rate limits
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{development-safety}{%
+\subsubsection{Development Safety}\label{sec:05-Deployment__local-development:development-safety}}
+
+Local development should:
+
+\begin{itemize}
+\tightlist
+\item
+  Avoid real user data
+\item
+  Use isolated test accounts
+\item
+  Never expose development services publicly
+\end{itemize}

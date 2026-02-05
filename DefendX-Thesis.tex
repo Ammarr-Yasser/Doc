@@ -1,0 +1,243 @@
+﻿\documentclass[12pt,a4paper]{report}
+
+% ===== Page layout =====
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\raggedbottom
+
+% ===== Fonts and typography =====
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{seqsplit}
+\usepackage{setspace}
+\onehalfspacing
+
+% ===== Line breaking and overflow mitigation =====
+\setlength{\emergencystretch}{3em}
+\tolerance=2000
+\pretolerance=1000
+\hyphenpenalty=200
+\exhyphenpenalty=200
+\sloppy
+\newcommand{\codewrap}[1]{\texttt{\seqsplit{#1}}}
+
+% ===== Figures, tables, and floats =====
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{placeins}
+
+% ===== Code listings (no shell-escape required) =====
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{fancyvrb}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
+
+% ===== Links and PDF navigation =====
+\usepackage{xurl}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
+\usepackage{bookmark}
+\Urlmuskip=0mu plus 1mu
+
+% ===== Headers/footers =====
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{DefendX Graduation Project}
+\fancyhead[R]{\leftmark}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{15pt}
+\addtolength{\topmargin}{-3pt}
+
+% Pandoc-style list helper used by generated section files.
+\providecommand{\tightlist}{}
+
+% Pandoc syntax-highlighting compatibility for generated section files.
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+
+% Pandoc token macros (safe no-op defaults).
+\providecommand{\NormalTok}[1]{#1}
+\providecommand{\FunctionTok}[1]{#1}
+\providecommand{\DataTypeTok}[1]{#1}
+\providecommand{\StringTok}[1]{#1}
+\providecommand{\DecValTok}[1]{#1}
+\providecommand{\OperatorTok}[1]{#1}
+\providecommand{\CommentTok}[1]{#1}
+\providecommand{\KeywordTok}[1]{#1}
+\providecommand{\BuiltInTok}[1]{#1}
+\providecommand{\VariableTok}[1]{#1}
+\providecommand{\ConstantTok}[1]{#1}
+\providecommand{\CharTok}[1]{#1}
+\providecommand{\SpecialCharTok}[1]{#1}
+\providecommand{\FloatTok}[1]{#1}
+\providecommand{\AlertTok}[1]{#1}
+\providecommand{\InformationTok}[1]{#1}
+\providecommand{\WarningTok}[1]{#1}
+\providecommand{\ErrorTok}[1]{#1}
+\providecommand{\OtherTok}[1]{#1}
+\providecommand{\RegionMarkerTok}[1]{#1}
+\providecommand{\AnnotationTok}[1]{#1}
+\providecommand{\AttributeTok}[1]{#1}
+\providecommand{\ControlFlowTok}[1]{#1}
+\providecommand{\ExtensionTok}[1]{#1}
+\providecommand{\ImportTok}[1]{#1}
+\providecommand{\PreprocessorTok}[1]{#1}
+\providecommand{\DocumentationTok}[1]{#1}
+
+\begin{document}
+
+% =====================
+% Front matter (Roman numerals)
+% =====================
+\pagenumbering{roman}
+
+\begin{titlepage}
+  \centering
+  \vspace*{1.5cm}
+
+  {\Large \textbf{Helwan University}\par}
+  \vspace{0.4cm}
+  {\large Faculty of Engineering\par}
+  {\large Communication and Electronics Engineering Department\par}
+
+  \vspace{1.5cm}
+  {\LARGE \textbf{DefendX}\par}
+  \vspace{0.3cm}
+  {\large A Web-Based Security Analysis Platform\par}
+
+  \vspace{1.4cm}
+  {\large Graduation Project\par}
+
+  \vspace{1.0cm}
+  \begin{tabular}{ll}
+    \textbf{Prepared by:} & \begin{tabular}[t]{@{}l@{}}
+      Ahmed Bakr \\
+      Ahmed Ammar \\
+      Yasser Mohamed Ragab \\
+      Mohamed Sama \\
+      Mohamed Shahd \\
+      Wael Shorouq \\
+      Mohammed Farouq
+    \end{tabular} \\
+    \\
+    \textbf{Supervised by:} & Dr. Ahmed Abdelhaleem \\
+    \textbf{Academic Year:} & 2025--2026 \\
+    \textbf{Submission Date:} & \underline{\hspace{4cm}} 2026 \\
+  \end{tabular}
+
+  \vfill
+\end{titlepage}
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This thesis presents DefendX, a cybersecurity platform that focuses on social engineering risks. The project is implemented as a web system with a frontend, backend services, and external intelligence providers. The technical scope of this report is limited to two core tools: the Link Analyzer and the File Download Checker. The document explains architecture, security controls, threat analysis, and current implementation details for both tools.\par
+
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+We would like to express our sincere gratitude to our supervisor, Dr. Ahmed Abdelhaleem, for his guidance, constructive feedback, and continuous support throughout this graduation project. We also thank the Communication and Electronics Engineering Department and the Faculty of Engineering at Helwan University for providing the academic environment and resources required to complete this work. This project was achieved through effective collaboration among all team members, with shared responsibility across analysis, implementation, and documentation tasks. We appreciate the professional and technical support that helped us maintain quality, consistency, and discipline during development. We are grateful for the opportunity to complete this work as part of our undergraduate training.\par
+
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+\begin{longtable}{@{}p{0.25\textwidth}p{0.7\textwidth}@{}}
+\toprule
+\textbf{Acronym} & \textbf{Meaning} \\
+\midrule
+API & Application Programming Interface \\
+JWT & JSON Web Token \\
+SSRF & Server-Side Request Forgery \\
+TLS & Transport Layer Security \\
+\bottomrule
+\end{longtable}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+\input{sections/00-Overview__project-overview.tex}
+\FloatBarrier
+
+\chapter{System Architecture}
+\input{sections/00-Overview__architecture-summary.tex}
+\FloatBarrier
+\input{sections/00-Overview__architecture-diagrams.tex}
+\FloatBarrier
+\input{sections/04-Frontend__frontend-architecture.tex}
+\FloatBarrier
+\input{sections/01-Backend__backend-overview.tex}
+\FloatBarrier
+
+\chapter{Security Model and Threat Analysis}
+\input{sections/00-Overview__threat-model.tex}
+\FloatBarrier
+\input{sections/00-Overview__security-controls-mapping.tex}
+\FloatBarrier
+\input{sections/01-Backend__authentication-authorization.tex}
+\FloatBarrier
+\input{sections/01-Backend__security-hardening.tex}
+\FloatBarrier
+\input{sections/04-Frontend__frontend-security-model.tex}
+\FloatBarrier
+
+\chapter{Link Analyzer}
+\input{sections/02-Tools__link-analyzer.tex}
+\FloatBarrier
+
+\chapter{File Download Checker}
+\input{sections/02-Tools__file-download-checker.tex}
+\FloatBarrier
+
+\chapter{Evaluation}
+This chapter presents a structured discussion of observed system behavior under representative usage conditions. The evaluation is focused on functional outcomes, consistency of risk signaling, and practical constraints of the implemented workflow.\par
+
+\section{Test Scenarios}
+Evaluation scenarios were defined to reflect realistic user actions for both implemented tools. For the Link Analyzer, scenarios include benign URLs, suspicious links requiring manual review, and clearly high-risk links. For the File Download Checker, scenarios include files with low-risk characteristics and files that trigger suspicious static indicators. In each case, the objective is to verify whether the returned risk level and explanatory output remain coherent with the observed input characteristics.\par
+
+\section{Link Analyzer Results}
+The Link Analyzer produces tiered results that differentiate low-risk, review-required, and high-risk link submissions. Observed outputs indicate that the tool provides a consistent risk classification format, accompanied by supporting indicators that improve interpretability for end users and analysts. The result presentation supports triage by combining a categorical risk level with concise rationale rather than relying on a single opaque score.\par
+
+\section{File Download Checker Results}
+The File Download Checker returns structured output for uploaded files, including metadata, analysis indicators, and a summarized risk decision. Across the tested scenarios, the tool distinguishes low-risk files from suspicious submissions using static evidence available at scan time. The response format remains suitable for operational review because it links the final classification to specific observed attributes.\par
+
+\section{System Limitations}
+The current evaluation remains limited in scope and does not yet provide large-scale statistical validation. Results are influenced by static analysis boundaries, the availability and quality of external intelligence, and environment-specific deployment settings. Accordingly, the presented findings should be interpreted as implementation-level validation of workflow behavior rather than exhaustive performance benchmarking.\par
+
+\chapter{Conclusion and Future Work}
+\section*{Conclusion}
+DefendX provides a practical architecture for detecting social engineering risk in user-facing workflows. The current implementation demonstrates clear request flow, security boundaries, and explainable outputs for two production-relevant tools: Link Analyzer and File Download Checker.\par
+
+\section*{Future Work}
+\addcontentsline{toc}{section}{Future Work}
+\input{sections/00-Overview__future-work.tex}
+\FloatBarrier
+\input{sections/00-Overview__known-limitations.tex}
+\FloatBarrier
+
+\appendix
+\chapter{Other Tools (Out of Scope)}
+Other DefendX tools may exist in the broader platform roadmap. They are intentionally excluded from the main thesis chapters to keep this report focused on Link Analyzer and File Download Checker. Future revisions can add those tools as independent chapters once implementation and evaluation are complete.\par
+
+\cleardoublepage
+\addcontentsline{toc}{chapter}{References}
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

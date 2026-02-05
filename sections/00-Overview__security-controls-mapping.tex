@@ -1,0 +1,139 @@
+\hypertarget{security-controls-mapping}{%
+\subsection{Security Controls Mapping}\label{sec:00-Overview__security-controls-mapping:security-controls-mapping}}
+
+This is a control-to-implementation map based on the current repository. Items not evidenced in code are marked TBD.
+
+\hypertarget{access-control}{%
+\subsubsection{Access Control}\label{sec:00-Overview__security-controls-mapping:access-control}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Role-based access enforcement for admin operations.
+\item
+  Evidence: \texttt{backend/app/user.py} uses \texttt{require\_admin()} and role checks; \texttt{backend/app/\_\_init\_\_.py} defines \texttt{require\_admin()}.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{authentication-and-session-management}{%
+\subsubsection{Authentication and Session Management}\label{sec:00-Overview__security-controls-mapping:authentication-and-session-management}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Password hashing and JWT-based session tokens with refresh rotation.
+\item
+  Evidence: \texttt{backend/app/auth.py}, \texttt{backend/app/models.py} (\texttt{RefreshToken}).
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{credential-transport-security}{%
+\subsubsection{Credential Transport Security}\label{sec:00-Overview__security-controls-mapping:credential-transport-security}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: RSA encryption for credential fields in the client, decryption server-side.
+\item
+  Evidence: \texttt{frontend/src/api/encryption.js}, \texttt{backend/app/security.py}.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{audit-logging}{%
+\subsubsection{Audit Logging}\label{sec:00-Overview__security-controls-mapping:audit-logging}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Tool usage history with timestamps and user metadata.
+\item
+  Evidence: \texttt{backend/app/history.py}, \texttt{backend/app/models.py}.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{operational-metrics}{%
+\subsubsection{Operational Metrics}\label{sec:00-Overview__security-controls-mapping:operational-metrics}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Per-user counters for tool usage.
+\item
+  Evidence: \texttt{backend/app/toolcount.py}, \texttt{backend/app/models.py}.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{input-validation-and-hardening}{%
+\subsubsection{Input Validation and Hardening}\label{sec:00-Overview__security-controls-mapping:input-validation-and-hardening}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Request validation models and URL target filtering.
+\item
+  Evidence: Flask-RESTX models in \texttt{backend/Tools/link\_analyzer/route/schemas.py}, \texttt{is\_public\_http} in \texttt{backend/Tools/link\_analyzer/route/route.py}.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{path-traversal-protection}{%
+\subsubsection{Path Traversal Protection}\label{sec:00-Overview__security-controls-mapping:path-traversal-protection}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Block traversal markers and forbidden file extensions.
+\item
+  Evidence: \texttt{backend/app/\_\_init\_\_.py} request filtering.
+\item
+  Status: Implemented.
+\end{itemize}
+
+\hypertarget{secrets-management}{%
+\subsubsection{Secrets Management}\label{sec:00-Overview__security-controls-mapping:secrets-management}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: Environment-based secrets and API keys.
+\item
+  Evidence: \texttt{backend/config.py} uses \texttt{decouple} config variables.
+\item
+  Status: Partially implemented; rotation and vault integration are TBD.
+\end{itemize}
+
+\hypertarget{rate-limiting-and-abuse-prevention}{%
+\subsubsection{Rate Limiting and Abuse Prevention}\label{sec:00-Overview__security-controls-mapping:rate-limiting-and-abuse-prevention}}
+
+\begin{itemize}
+\tightlist
+\item
+  Control: API rate limiting and quotas.
+\item
+  Evidence: Not found.
+\item
+  Status: TBD (verify in code).
+\end{itemize}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Area & Control \\
+\midrule
+\endhead
+Authentication & JWT access \& refresh tokens \\
+Authorization & Role-based access control \\
+Input Validation & Server-side validation \\
+Sensitive Data & Hash-only processing \\
+URL Safety & SSRF target filtering and allow/deny rules \\
+File Safety & Static analysis only \\
+Auditability & History logging \\
+Abuse Prevention & Tool usage counters \\
+Privacy & Minimal retention \\
+Failure Safety & Risk-increasing failures \\
+\bottomrule
+\end{longtable}

@@ -1,0 +1,213 @@
+\hypertarget{threat-model}{%
+\subsection{Threat Model}\label{sec:00-Overview__threat-model:threat-model}}
+
+\hypertarget{assets}{%
+\subsubsection{Assets}\label{sec:00-Overview__threat-model:assets}}
+
+\begin{itemize}
+\tightlist
+\item
+  User identities, roles, and account status.
+\item
+  JWT access and refresh tokens.
+\item
+  URLs and file hashes submitted for inspection.
+\item
+  Audit and usage logs.
+\end{itemize}
+
+\hypertarget{trust-boundaries}{%
+\subsubsection{Trust Boundaries}\label{sec:00-Overview__threat-model:trust-boundaries}}
+
+\begin{itemize}
+\tightlist
+\item
+  Browser SPA is an untrusted client.
+\item
+  Backend API is the primary trust enforcement point.
+\item
+  External reputation providers are third-party dependencies.
+\item
+  Database stores authentication and logging state.
+\end{itemize}
+
+\hypertarget{stride-analysis}{%
+\subsubsection{STRIDE Analysis}\label{sec:00-Overview__threat-model:stride-analysis}}
+
+\hypertarget{spoofing}{%
+\paragraph{Spoofing}\label{sec:00-Overview__threat-model:spoofing}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Credential reuse or token theft.
+\item
+  Mitigation: RSA-encrypted credential fields on the client, JWT access + refresh with rotation, refresh token blocklist enforcement.
+\end{itemize}
+
+\hypertarget{tampering}{%
+\paragraph{Tampering}\label{sec:00-Overview__threat-model:tampering}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Client-side modification of payloads or headers.
+\item
+  Mitigation: JWT verification on protected endpoints; request validation via Flask-RESTX models for tool inputs.
+\end{itemize}
+
+\hypertarget{repudiation}{%
+\paragraph{Repudiation}\label{sec:00-Overview__threat-model:repudiation}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Users deny having run tools or changed account data.
+\item
+  Mitigation: \texttt{History} and \texttt{Tool\_Counter} logging on tool endpoints.
+\end{itemize}
+
+\hypertarget{information-disclosure}{%
+\paragraph{Information Disclosure}\label{sec:00-Overview__threat-model:information-disclosure}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Access to source files, \texttt{.env}, or backend code via path traversal.
+\item
+  Mitigation: Request path hardening and forbidden file marker checks in \texttt{backend/app/\_\_init\_\_.py}.
+\end{itemize}
+
+\hypertarget{denial-of-service}{%
+\paragraph{Denial of Service}\label{sec:00-Overview__threat-model:denial-of-service}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Excessive scans, file uploads, or dynamic scans.
+\item
+  Mitigation: None visible in code; rate limiting and quotas are TBD (verify in code).
+\end{itemize}
+
+\hypertarget{elevation-of-privilege}{%
+\paragraph{Elevation of Privilege}\label{sec:00-Overview__threat-model:elevation-of-privilege}}
+
+\begin{itemize}
+\tightlist
+\item
+  Risk: Non-admins accessing admin routes.
+\item
+  Mitigation: \texttt{require\_admin()} checks JWT role claim; admin-only routes enforce role checks.
+\end{itemize}
+
+\hypertarget{additional-security-notes}{%
+\subsubsection{Additional Security Notes}\label{sec:00-Overview__threat-model:additional-security-notes}}
+
+\begin{itemize}
+\tightlist
+\item
+  Link Analyzer blocks private/loopback IP targets to reduce SSRF risk (\texttt{is\_public\_http}).
+\item
+  Refresh token revocation is enforced server-side using \texttt{RefreshToken} table.
+\item
+  Authentication token state is stored server-side with expiry and revocation controls.
+\end{itemize}
+
+\hypertarget{open-threats--tbd}{%
+\subsubsection{Open Threats / TBD}\label{sec:00-Overview__threat-model:open-threats--tbd}}
+
+\begin{itemize}
+\tightlist
+\item
+  Rate limiting, WAF, and abuse detection are not shown in code (TBD (verify in code)).
+\item
+  Secure file storage for uploaded artifacts beyond temporary files is TBD (verify in code).
+\item
+  Production database hardening and encryption at rest are TBD (verify in code).
+\end{itemize}
+
+\hypertarget{threat-model-stride}{%
+\subsection{Threat Model (STRIDE)}\label{sec:00-Overview__threat-model:threat-model-stride}}
+
+\hypertarget{spoofing-1}{%
+\subsubsection{Spoofing}\label{sec:00-Overview__threat-model:spoofing-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: Token impersonation
+\item
+  Control: JWT signature validation, short token lifetime
+\end{itemize}
+
+\hypertarget{tampering-1}{%
+\subsubsection{Tampering}\label{sec:00-Overview__threat-model:tampering-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: Request manipulation
+\item
+  Control: Server-side validation, immutable history
+\end{itemize}
+
+\hypertarget{repudiation-1}{%
+\subsubsection{Repudiation}\label{sec:00-Overview__threat-model:repudiation-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: User denies actions
+\item
+  Control: Per-user audit logging
+\end{itemize}
+
+\hypertarget{information-disclosure-1}{%
+\subsubsection{Information Disclosure}\label{sec:00-Overview__threat-model:information-disclosure-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: Sensitive data disclosure
+\item
+  Control: Hash-only processing, no raw data storage
+\end{itemize}
+
+\hypertarget{denial-of-service-1}{%
+\subsubsection{Denial of Service}\label{sec:00-Overview__threat-model:denial-of-service-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: Resource exhaustion
+\item
+  Control: File size limits, tool counters
+\end{itemize}
+
+\hypertarget{elevation-of-privilege-1}{%
+\subsubsection{Elevation of Privilege}\label{sec:00-Overview__threat-model:elevation-of-privilege-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  Threat: Unauthorized admin access
+\item
+  Control: Role-based access control
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{residual-risks}{%
+\subsubsection{Residual Risks}\label{sec:00-Overview__threat-model:residual-risks}}
+
+\begin{itemize}
+\tightlist
+\item
+  SSRF via DNS rebinding
+\item
+  Reputation API dependency
+\item
+  Heuristic scoring limitations
+\end{itemize}
+
+All residual risks are documented and accepted.

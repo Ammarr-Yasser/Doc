@@ -1,0 +1,103 @@
+\hypertarget{architecture-diagrams-plain-text}{%
+\subsection{Architecture Diagrams (Plain Text)}\label{sec:00-Overview__architecture-diagrams:architecture-diagrams-plain-text}}
+
+\hypertarget{system-context}{%
+\subsubsection{System Context}\label{sec:00-Overview__architecture-diagrams:system-context}}
+
+{[}Browser SPA{]} -\/-\/-\/-HTTPS-\/-\/-\/-\textgreater{} {[}Flask API /api{]}
+{[}Flask API /api{]} -\/-\/-\/-\/-\textgreater{} {[}SQLite DB: User, History, Tool\_Counter, RefreshToken{]}
+{[}Flask API /api{]} -\/-\/-\/-\/-\textgreater{} {[}External APIs: VirusTotal, Google Safe Browsing, IPGeolocation{]}
+
+\hypertarget{tool-processing-flow}{%
+\subsubsection{Tool Processing Flow}\label{sec:00-Overview__architecture-diagrams:tool-processing-flow}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Client obtains public RSA key from \texttt{/api/auth/public-key}.
+\item
+  Client encrypts credentials and calls \texttt{/api/auth/signup} or \texttt{/api/auth/login}.
+\item
+  Backend decrypts fields, validates credentials, and returns access/refresh tokens.
+\item
+  Client submits a URL or file to a tool endpoint with an access token.
+\item
+  Backend runs analysis, calculates risk score, then logs \texttt{History} and updates \texttt{Tool\_Counter}.
+\item
+  Client renders result, history, and counter metrics.
+\end{enumerate}
+
+\hypertarget{optional-dynamic-scan-link-analyzer}{%
+\subsubsection{Optional Dynamic Scan (Link Analyzer)}\label{sec:00-Overview__architecture-diagrams:optional-dynamic-scan-link-analyzer}}
+
+User-invoked deep/custom URL scans may use Playwright to collect dynamic page indicators. If Playwright is not installed or disabled, this step may fail and should be treated as optional or degraded.
+
+\hypertarget{architecture-diagrams-text-description}{%
+\subsection{Architecture Diagrams (Text Description)}\label{sec:00-Overview__architecture-diagrams:architecture-diagrams-text-description}}
+
+\hypertarget{system-architecture}{%
+\subsubsection{System Architecture}\label{sec:00-Overview__architecture-diagrams:system-architecture}}
+
+User → Frontend SPA → DefendX Backend → Security Tools → Database
+
+The frontend communicates with the backend exclusively via HTTPS. All authentication and authorization occur in the backend.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{tool-execution-flow}{%
+\subsubsection{Tool Execution Flow}\label{sec:00-Overview__architecture-diagrams:tool-execution-flow}}
+
+Request
+→ JWT validation\\
+→ Input validation\\
+→ Tool execution\\
+→ Risk scoring\\
+→ History logging\\
+→ Response
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{external-services-interaction}{%
+\subsubsection{External Services Interaction}\label{sec:00-Overview__architecture-diagrams:external-services-interaction}}
+
+The backend communicates with:
+
+\begin{itemize}
+\tightlist
+\item
+  VirusTotal
+\item
+  Google Safe Browsing
+\item
+  IP intelligence providers
+\item
+  Additional reputation or URL intelligence providers (deployment-dependent)
+\end{itemize}
+
+The frontend never communicates directly with these services.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{authentication-flow}{%
+\subsubsection{Authentication Flow}\label{sec:00-Overview__architecture-diagrams:authentication-flow}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  User logs in
+\item
+  Backend issues JWT access and refresh tokens
+\item
+  Frontend uses access token for API calls
+\item
+  Backend validates token on each request
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{security-boundary}{%
+\subsubsection{Security Boundary}\label{sec:00-Overview__architecture-diagrams:security-boundary}}
+
+The backend is the sole trusted component. Compromise of the frontend does not imply compromise of the security engine.

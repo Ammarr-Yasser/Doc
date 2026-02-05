@@ -1,0 +1,247 @@
+\hypertarget{frontend-security-model}{%
+\subsection{Frontend Security Model}\label{sec:04-Frontend__frontend-security-model:frontend-security-model}}
+
+\hypertarget{token-storage}{%
+\subsubsection{Token Storage}\label{sec:04-Frontend__frontend-security-model:token-storage}}
+
+\begin{itemize}
+\tightlist
+\item
+  Access and refresh tokens are stored in \texttt{localStorage}.
+\item
+  Risk: XSS can expose tokens. No in-code mitigation beyond standard frontend practices (TBD (verify in code)).
+\end{itemize}
+
+\hypertarget{credential-encryption}{%
+\subsubsection{Credential Encryption}\label{sec:04-Frontend__frontend-security-model:credential-encryption}}
+
+\begin{itemize}
+\tightlist
+\item
+  RSA encryption is applied to \texttt{username}, \texttt{email}, and \texttt{password} fields before submit.
+\item
+  Public key is fetched from \texttt{/api/auth/public-key}.
+\end{itemize}
+
+\hypertarget{session-management}{%
+\subsubsection{Session Management}\label{sec:04-Frontend__frontend-security-model:session-management}}
+
+\begin{itemize}
+\tightlist
+\item
+  Access token is attached to all API requests.
+\item
+  Refresh token is used only for \texttt{/auth/refresh} and replaced on rotation.
+\end{itemize}
+
+\hypertarget{route-protection}{%
+\subsubsection{Route Protection}\label{sec:04-Frontend__frontend-security-model:route-protection}}
+
+\begin{itemize}
+\tightlist
+\item
+  Protected routes require presence of access token.
+\item
+  Admin routes require role check from user payload.
+\end{itemize}
+
+\hypertarget{error-handling}{%
+\subsubsection{Error Handling}\label{sec:04-Frontend__frontend-security-model:error-handling}}
+
+\begin{itemize}
+\tightlist
+\item
+  API errors are parsed and surfaced to UI with descriptive messages.
+\end{itemize}
+
+\hypertarget{cors-and-api-base-url}{%
+\subsubsection{CORS and API Base URL}\label{sec:04-Frontend__frontend-security-model:cors-and-api-base-url}}
+
+\begin{itemize}
+\tightlist
+\item
+  Default API base is \texttt{/api}, aligning with backend proxy or same-origin deployment.
+\end{itemize}
+
+\hypertarget{trust-assumptions}{%
+\subsubsection{Trust Assumptions}\label{sec:04-Frontend__frontend-security-model:trust-assumptions}}
+
+The frontend is treated as \textbf{fully untrusted}.
+
+Assumptions:
+
+\begin{itemize}
+\tightlist
+\item
+  Client-side logic can be modified
+\item
+  Client-side validation can be bypassed
+\item
+  Requests may be forged or replayed
+\end{itemize}
+
+All security enforcement must occur server-side.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{token-handling}{%
+\subsubsection{Token Handling}\label{sec:04-Frontend__frontend-security-model:token-handling}}
+
+\hypertarget{access-tokens}{%
+\paragraph{Access Tokens}\label{sec:04-Frontend__frontend-security-model:access-tokens}}
+
+\begin{itemize}
+\tightlist
+\item
+  Short-lived JWTs
+\item
+  Sent in Authorization headers
+\item
+  Never embedded in URLs
+\end{itemize}
+
+\hypertarget{refresh-tokens}{%
+\paragraph{Refresh Tokens}\label{sec:04-Frontend__frontend-security-model:refresh-tokens}}
+
+\begin{itemize}
+\tightlist
+\item
+  Not directly accessed by frontend JavaScript when possible
+\item
+  Used only for token renewal
+\item
+  Validated server-side
+\end{itemize}
+
+Exact storage strategy may vary by frontend implementation.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{recommended-token-storage-strategies}{%
+\subsubsection{Recommended Token Storage Strategies}\label{sec:04-Frontend__frontend-security-model:recommended-token-storage-strategies}}
+
+\hypertarget{in-memory-storage}{%
+\paragraph{In-Memory Storage}\label{sec:04-Frontend__frontend-security-model:in-memory-storage}}
+
+\begin{itemize}
+\tightlist
+\item
+  Reduced XSS exposure
+\item
+  Token lost on refresh
+\end{itemize}
+
+\hypertarget{secure-cookies-http-only}{%
+\paragraph{Secure Cookies (HTTP-only)}\label{sec:04-Frontend__frontend-security-model:secure-cookies-http-only}}
+
+\begin{itemize}
+\tightlist
+\item
+  Strong XSS protection
+\item
+  Requires CSRF protections
+\end{itemize}
+
+LocalStorage is discouraged for sensitive tokens.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{client-side-validation}{%
+\subsubsection{Client-Side Validation}\label{sec:04-Frontend__frontend-security-model:client-side-validation}}
+
+Client-side validation is used for:
+
+\begin{itemize}
+\tightlist
+\item
+  UX improvement
+\item
+  Early feedback
+\item
+  Preventing obvious mistakes
+\end{itemize}
+
+Client-side validation is \textbf{never authoritative}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{cors-and-browser-security}{%
+\subsubsection{CORS and Browser Security}\label{sec:04-Frontend__frontend-security-model:cors-and-browser-security}}
+
+The frontend relies on backend CORS configuration.
+
+Security considerations:
+
+\begin{itemize}
+\tightlist
+\item
+  Strict origin configuration
+\item
+  Limited allowed methods
+\item
+  Controlled headers
+\end{itemize}
+
+Browser-enforced policies complement backend controls.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{error-and-failure-safety}{%
+\subsubsection{Error and Failure Safety}\label{sec:04-Frontend__frontend-security-model:error-and-failure-safety}}
+
+Frontend behavior under failure:
+
+\begin{itemize}
+\tightlist
+\item
+  Does not assume safety when errors occur
+\item
+  Displays partial results explicitly
+\item
+  Warns users when intelligence data is unavailable
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{prevented-attack-classes}{%
+\subsubsection{Prevented Attack Classes}\label{sec:04-Frontend__frontend-security-model:prevented-attack-classes}}
+
+By design, the frontend does not allow:
+
+\begin{itemize}
+\tightlist
+\item
+  Privilege escalation via UI
+\item
+  Direct external intelligence API access
+\item
+  Trust decisions based on client state
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{security-responsibilities-summary}{%
+\subsubsection{Security Responsibilities Summary}\label{sec:04-Frontend__frontend-security-model:security-responsibilities-summary}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Responsibility & Location \\
+\midrule
+\endhead
+Authentication & Backend \\
+Authorization & Backend \\
+Risk Scoring & Backend \\
+Input Validation & Backend \\
+Secret Storage & Backend \\
+Visualization & Frontend \\
+\bottomrule
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{security-model-summary}{%
+\subsubsection{Security Model Summary}\label{sec:04-Frontend__frontend-security-model:security-model-summary}}
+
+The frontend enhances usability while preserving strict trust boundaries.
+
+Compromise of the frontend does not imply compromise of DefendX's security logic.

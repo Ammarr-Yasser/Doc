@@ -1,0 +1,184 @@
+\section{Overview}
+The File Download Checker evaluates uploaded files and estimates whether they are unsafe. The tool performs static inspection and reputation lookup, then returns a structured risk result.
+
+This tool matters for social engineering defense because file-based lures are common in phishing and fraud campaigns. Static triage helps reduce exposure to malicious attachments before users open them.
+
+\begin{table}[H]
+  \centering
+  \caption{File Download Checker API Endpoints}
+  \begin{tabular}{|l|p{0.62\textwidth}|}
+    \hline
+    \textbf{Endpoint} & \textbf{Description} \\ \hline
+    \texttt{POST /tools/file-checker} & Upload file for static analysis \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-backend-processing-pipeline.png}
+  \caption{File Download Checker: Static Analysis Pipeline}
+  \label{fig:file-checker-static-analysis-pipeline}
+\end{figure}
+\FloatBarrier
+
+\section{Scope and Assumptions}
+\begin{itemize}
+\item Supported input is uploaded file data through multipart form requests.
+\item Out of scope: dynamic sandbox execution and runtime behavior detonation.
+\item Trust boundaries: uploaded file is untrusted; malware intelligence service is semi-trusted; scoring and validation code are trusted system components.
+\end{itemize}
+
+\section{Inputs and Outputs}
+\textbf{Inputs}
+\begin{itemize}
+\item Multipart file field is required.
+\item File size limits are enforced, exact thresholds TBD (verify in code).
+\item Allowed/restricted file types list: TBD (verify in code).
+\item Filename normalization and sanitization are applied.
+\end{itemize}
+
+\textbf{Outputs}
+\begin{itemize}
+\item File metadata (name, extension, MIME type).
+\item Hash and static indicators (including entropy and type-specific signals where available).
+\item Risk result with score, level, and reasons.
+\item Exact response schema and optional fields: TBD (verify in code).
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-file-checker-upload.png}
+  \caption{File Download Checker user interface (upload / drop zone).}
+  \label{fig:file-checker-ui-upload}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-file-checker-result-low.png}
+  \caption{File Download Checker result interface showing a low-risk classification.}
+  \label{fig:file-checker-ui-low}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-file-checker-result-suspicious.png}
+  \caption{File Download Checker result interface showing a suspicious classification with triggered indicators.}
+  \label{fig:file-checker-ui-suspicious}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview.png}
+  \caption{File Download Checker: Hashing and Reputation Lookup}
+  \label{fig:file-checker-hashing-reputation-lookup}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/ui-file-checker-result-suspicious.png}
+  \caption{File Download Checker: Example Result Screen}
+  \label{fig:file-checker-example-result-screen}
+\end{figure}
+\FloatBarrier
+
+\section{Processing Pipeline}
+\begin{enumerate}
+\item Validate upload request and file presence.
+\item Sanitize metadata and apply size/type pre-checks.
+\item Store file temporarily for analysis.
+\item Run static analysis and compute hash.
+\item Query reputation service using computed hash.
+\item Aggregate indicators into risk output and return response.
+\item Record usage and cleanup temporary artifacts.
+\end{enumerate}
+
+\textbf{Error handling behavior}
+\begin{itemize}
+\item Invalid or missing file input is rejected immediately.
+\item Unsupported file states return controlled error output.
+\item External reputation API failure behavior: TBD (verify in code).
+\item Temporary file cleanup failure handling: TBD (verify in code).
+\end{itemize}
+
+\textbf{Logging and audit}
+\begin{itemize}
+\item History and tool counter are updated per request.
+\item Full file content should not be logged.
+\item Logged metadata fields are deployment-dependent: TBD (verify in code).
+\end{itemize}
+
+\section{Detection Logic}
+\begin{itemize}
+\item Indicators include MIME/extension consistency, entropy signals, static suspicious patterns, and reputation verdicts.
+\item Hash-based lookup contributes known-malicious or unknown status context.
+\item Scoring appears rule-based with thresholds; exact weighting and cutoffs are TBD (verify in code).
+\end{itemize}
+
+\section{Security and Abuse Resistance}
+\begin{itemize}
+\item Input hardening checks file presence, size, and sanitized names.
+\item Files are analyzed statically and are not executed.
+\item Abuse controls such as rate limits and per-user quotas: TBD (verify in code).
+\item Tool counters support anomaly tracking.
+\end{itemize}
+
+\section{Privacy Considerations}
+\begin{itemize}
+\item Uploaded files are processed for analysis and may use temporary storage.
+\item Retention and deletion timing depend on deployment configuration.
+\item Authentication tokens are handled at platform level, not by file content logic.
+\end{itemize}
+
+\section{Limitations}
+\begin{itemize}
+\item Static-only analysis can miss behavior that appears only at runtime.
+\item Reputation coverage is limited for new or rare files.
+\item Encrypted or obfuscated payloads can reduce indicator quality.
+\item Final score supports triage; it is not a full malware verdict.
+\end{itemize}
+
+\section{Test Plan (Scalable)}
+\textbf{Unit tests}
+\begin{itemize}
+\item Validator behavior for file size/type/empty input.
+\item Hashing and metadata extraction correctness.
+\item Score mapping for known indicator combinations.
+\end{itemize}
+
+\textbf{Integration tests}
+\begin{itemize}
+\item End-to-end upload and response schema verification.
+\item External reputation lookup success/failure paths.
+\end{itemize}
+
+\textbf{Adversarial tests}
+\begin{itemize}
+\item Renamed extensions and MIME mismatch samples.
+\item Packed/obfuscated files and malformed payload cases.
+\end{itemize}
+
+\textbf{Performance tests}
+\begin{itemize}
+\item Latency versus file size and type.
+\item Throughput and timeout behavior at concurrent load.
+\end{itemize}
+
+\section{Operational Notes}
+\begin{itemize}
+\item Monitor upload failures, analysis errors, and reputation lookup availability.
+\item Track tool usage counters and distribution of risk levels.
+\item Troubleshooting steps: verify file limits, inspect temp storage health, confirm API key validity, and review history entries.
+\end{itemize}
+
+\subsection{Audit Trail and History Logging}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/history-file-checker-filter.png}
+  \caption{Audit trail showing historical File Download Checker scans filtered by tool.}
+  \label{fig:history-file-checker}
+\end{figure}
+\FloatBarrier
