@@ -5,6 +5,18 @@ This tool matters for social engineering defense because malicious campaigns oft
 
 Some UI screenshots in this chapter reflect earlier prototype naming; in this report the tool is referred to as Link Analyzer.
 
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox{0.9\linewidth}{\centering
+  \texttt{URL Input} $\rightarrow$ \texttt{Validation} $\rightarrow$ \texttt{Checks} $\rightarrow$ \texttt{Aggregation} $\rightarrow$ \texttt{Risk Output}
+  }}
+  \caption{Link Analyzer Decision Pipeline}
+  \label{fig:link-analyzer-decision-pipeline}
+\end{figure}
+\FloatBarrier
+
+As shown in Figure~\ref{fig:link-analyzer-decision-pipeline}, Link Analyzer execution follows a fixed sequence from validated input to risk output.
+
 \begin{table}[H]
   \centering
   \caption{Link Analyzer API Endpoints}
@@ -16,6 +28,12 @@ Some UI screenshots in this chapter reflect earlier prototype naming; in this re
     \texttt{POST /custom-scan} & Custom scan options \\ \hline
   \end{tabular}
 \end{table}
+
+\begin{lstlisting}
+POST /quick-scan
+POST /deep-scan
+POST /custom-scan
+\end{lstlisting}
 
 \begin{figure}[H]
   \centering
@@ -113,6 +131,10 @@ Some UI screenshots in this chapter reflect earlier prototype naming; in this re
 \item Collect check outputs and compute aggregate risk.
 \item Return structured response and record tool usage.
 \end{enumerate}
+
+\begin{lstlisting}
+URL Input -> Validation -> Checks -> Aggregation -> Risk Output
+\end{lstlisting}
 
 \textbf{Error handling behavior}
 \begin{itemize}

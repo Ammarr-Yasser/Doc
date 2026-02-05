@@ -31,6 +31,20 @@
   Database stores authentication and logging state.
 \end{itemize}
 
+Figure~\ref{fig:system-trust-boundaries-security-domains} summarizes the security domains and trust boundaries used in this thesis scope.
+
+\begin{figure}[H]
+  \centering
+  \fbox{\parbox{0.9\linewidth}{\centering
+  Untrusted Domain: Browser Client\\[0.4em]
+  \texttt{Browser} $\rightarrow$ \texttt{Frontend} $\rightarrow$ \texttt{Backend} $\rightarrow$ \texttt{External APIs}\\[0.4em]
+  Trusted System Domain: Frontend, Backend, and Database\\
+  Third-Party Domain: External APIs (reputation/intelligence providers)
+  }}
+  \caption{System Trust Boundaries and Security Domains}
+  \label{fig:system-trust-boundaries-security-domains}
+\end{figure}
+
 \hypertarget{stride-analysis}{%
 \subsubsection{STRIDE Analysis}\label{sec:00-Overview__threat-model:stride-analysis}}
 
