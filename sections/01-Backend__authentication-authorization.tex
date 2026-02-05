@@ -151,6 +151,8 @@ Authentication and authorization are enforced \textbf{before any security tool l
 \hypertarget{authentication-flow}{%
 \subsubsection{Authentication Flow}\label{sec:01-Backend__authentication-authorization:authentication-flow}}
 
+Figure~\ref{fig:auth-tool-sequence} illustrates the authentication and protected tool execution sequence used before tool processing.
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
@@ -173,6 +175,13 @@ Authentication and authorization are enforced \textbf{before any security tool l
 \item
   Refresh token used only for token renewal
 \end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{figures/fig-auth-and-tool-execution-sequence}
+  \caption{Authentication and protected tool execution sequence}
+  \label{fig:auth-tool-sequence}
+\end{figure}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 

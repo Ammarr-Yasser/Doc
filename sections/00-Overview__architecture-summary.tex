@@ -18,6 +18,15 @@ DefendX uses a layered architecture with strict separation of concerns:
   Persistent storage
 \end{itemize}
 
+Figure~\ref{fig:system-context} presents the system context, including external intelligence sources and service boundaries.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-system-context}
+  \caption{System context and external intelligence sources}
+  \label{fig:system-context}
+\end{figure}
+
 \hypertarget{high-level-components}{%
 \subsubsection{High-Level Components}\label{sec:00-Overview__architecture-summary:high-level-components}}
 
@@ -32,6 +41,15 @@ DefendX uses a layered architecture with strict separation of concerns:
 \item
   Async Tasks: Celery worker factory wired to Flask config (\texttt{CELERY\_BROKER\_URL}, \texttt{CELERY\_RESULT\_BACKEND}).
 \end{itemize}
+
+Figure~\ref{fig:system-architecture-overview} shows the high-level DefendX architecture and core service interactions.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview}
+  \caption{DefendX system architecture overview}
+  \label{fig:system-architecture-overview}
+\end{figure}
 
 \hypertarget{frontend}{%
 \paragraph{Frontend}\label{sec:00-Overview__architecture-summary:frontend}}

@@ -7,15 +7,13 @@ Some UI screenshots in this chapter reflect earlier prototype naming; in this re
 
 \begin{figure}[H]
   \centering
-  \fbox{\parbox{0.9\linewidth}{\centering
-  \texttt{URL Input} $\rightarrow$ \texttt{Validation} $\rightarrow$ \texttt{Checks} $\rightarrow$ \texttt{Aggregation} $\rightarrow$ \texttt{Risk Output}
-  }}
-  \caption{Link Analyzer Decision Pipeline}
-  \label{fig:link-analyzer-decision-pipeline}
+  \includegraphics[width=\linewidth]{figures/fig-link-analyzer-decision-flow}
+  \caption{Link Analyzer decision flow}
+  \label{fig:link-analyzer-decision-flow}
 \end{figure}
 \FloatBarrier
 
-As shown in Figure~\ref{fig:link-analyzer-decision-pipeline}, Link Analyzer execution follows a fixed sequence from validated input to risk output.
+As shown in Figure~\ref{fig:link-analyzer-decision-flow}, Link Analyzer execution follows a fixed sequence from validated input to risk output.
 
 \begin{table}[H]
   \centering
@@ -29,17 +27,20 @@ As shown in Figure~\ref{fig:link-analyzer-decision-pipeline}, Link Analyzer exec
   \end{tabular}
 \end{table}
 
-\begin{lstlisting}
-POST /quick-scan
-POST /deep-scan
-POST /custom-scan
-\end{lstlisting}
+Figure~\ref{fig:link-analyzer-endpoints} visualizes the endpoint grouping used by this chapter.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fig-authentication-jwt-sequence.png}
-  \caption{Authentication workflow and JWT-protected request sequence for Link Analyzer execution.}
-  \label{fig:link-analyzer-request-response-flow}
+  \includegraphics[width=\linewidth]{figures/fig-link-analyzer-endpoints}
+  \caption{Link Analyzer API endpoints}
+  \label{fig:link-analyzer-endpoints}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-link-analyzer-processing-pipeline}
+  \caption{Link Analyzer processing pipeline}
+  \label{fig:link-analyzer-processing-pipeline}
 \end{figure}
 \FloatBarrier
 
@@ -66,6 +67,8 @@ POST /custom-scan
 \item Check-level details (domain/reputation/redirect/SSL and optional deep checks).
 \item Indicator flags and metadata fields: exact schema Not evidenced in the reviewed codebase.
 \end{itemize}
+
+Figure~\ref{fig:link-analyzer-processing-pipeline} summarizes the execution stages used after input validation.
 
 \begin{figure}[H]
   \centering
@@ -107,21 +110,15 @@ POST /custom-scan
 \end{figure}
 \FloatBarrier
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fig-backend-processing-pipeline.png}
-  \caption{Link Analyzer: Redirect and Reputation Pipeline}
-  \label{fig:link-analyzer-redirect-reputation-pipeline}
+  \includegraphics[width=\linewidth]{figures/fig-link-analyzer-redirect-reputation}
+  \caption{Link Analyzer redirect and reputation pipeline}
+  \label{fig:link-analyzer-redirect-reputation}
 \end{figure}
 \FloatBarrier
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview.png}
-  \caption{Link Analyzer: External intelligence inputs and resulting tool output indicators in the system architecture context. Diagram contains legacy prototype labels; the final scope of this report excludes email tooling.}
-  \label{fig:link-analyzer-threat-indicators-output}
-\end{figure}
-\FloatBarrier
+Figure~\ref{fig:link-analyzer-redirect-reputation} highlights how redirect and reputation signals are combined before final scoring.
 
 \section{Processing Pipeline}
 \begin{enumerate}
@@ -131,10 +128,6 @@ POST /custom-scan
 \item Collect check outputs and compute aggregate risk.
 \item Return structured response and record tool usage.
 \end{enumerate}
-
-\begin{lstlisting}
-URL Input -> Validation -> Checks -> Aggregation -> Risk Output
-\end{lstlisting}
 
 \textbf{Error handling behavior}
 \begin{itemize}

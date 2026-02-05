@@ -5,12 +5,10 @@ This tool matters for social engineering defense because file-based lures are co
 
 Some UI screenshots in this chapter reflect earlier prototype naming; in this report the tool is referred to as File Download Checker.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \fbox{\parbox{0.9\linewidth}{\centering
-  \texttt{File Upload} $\rightarrow$ \texttt{Metadata/Hash} $\rightarrow$ \texttt{Reputation Lookup} $\rightarrow$ \texttt{Risk Output}
-  }}
-  \caption{File Download Checker Processing Flow}
+  \includegraphics[width=\linewidth]{figures/fig-file-checker-processing-flow}
+  \caption{File Download Checker processing flow}
   \label{fig:file-checker-processing-flow}
 \end{figure}
 \FloatBarrier
@@ -27,17 +25,24 @@ Figure~\ref{fig:file-checker-processing-flow} summarizes the processing sequence
   \end{tabular}
 \end{table}
 
-\begin{lstlisting}
-POST /tools/file-checker
-\end{lstlisting}
+Figure~\ref{fig:file-checker-endpoint} shows the endpoint representation used in implementation documentation.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/fig-backend-processing-pipeline.png}
-  \caption{File Download Checker: Static Analysis Pipeline}
+  \includegraphics[width=\linewidth]{figures/fig-file-checker-endpoint}
+  \caption{File Download Checker API endpoint}
+  \label{fig:file-checker-endpoint}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig-file-checker-static-analysis-pipeline}
+  \caption{File Download Checker static analysis pipeline}
   \label{fig:file-checker-static-analysis-pipeline}
 \end{figure}
 \FloatBarrier
+
+Figure~\ref{fig:file-checker-static-analysis-pipeline} details the static pipeline from initial file parsing to risk feature extraction.
 
 \section{Scope and Assumptions}
 \begin{itemize}
@@ -89,14 +94,6 @@ POST /tools/file-checker
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{figures/fig-system-architecture-overview.png}
-  \caption{File Download Checker: Hashing and Reputation Lookup}
-  \label{fig:file-checker-hashing-reputation-lookup}
-\end{figure}
-\FloatBarrier
-
-\begin{figure}[H]
-  \centering
   \includegraphics[width=\linewidth]{figures/ui-file-checker-result-suspicious.png}
   \caption{File Download Checker: Example Result Screen}
   \label{fig:file-checker-example-result-screen}
@@ -113,10 +110,6 @@ POST /tools/file-checker
 \item Aggregate indicators into risk output and return response.
 \item Record usage and cleanup temporary artifacts.
 \end{enumerate}
-
-\begin{lstlisting}
-File Upload -> Metadata/Hash -> Reputation Lookup -> Risk Output
-\end{lstlisting}
 
 \textbf{Error handling behavior}
 \begin{itemize}
