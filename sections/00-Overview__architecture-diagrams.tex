@@ -4,9 +4,7 @@
 \hypertarget{system-context}{%
 \subsubsection{System Context}\label{sec:00-Overview__architecture-diagrams:system-context}}
 
-{[}Browser SPA{]} -\/-\/-\/-HTTPS-\/-\/-\/-\textgreater{} {[}Flask API /api{]}
-{[}Flask API /api{]} -\/-\/-\/-\/-\textgreater{} {[}SQLite DB: User, History, Tool\_Counter, RefreshToken{]}
-{[}Flask API /api{]} -\/-\/-\/-\/-\textgreater{} {[}External APIs: VirusTotal, Google Safe Browsing, IPGeolocation{]}
+System context is summarized in Figure~\ref{fig:system-context}, which shows the browser SPA communicating with the backend API over HTTPS. External intelligence providers are reached only by the backend, not directly by the frontend. The database is accessed by the backend for user state, history, and counters.
 
 \hypertarget{tool-processing-flow}{%
 \subsubsection{Tool Processing Flow}\label{sec:00-Overview__architecture-diagrams:tool-processing-flow}}
@@ -39,7 +37,7 @@ User-invoked deep/custom URL scans may use Playwright to collect dynamic page in
 \hypertarget{system-architecture}{%
 \subsubsection{System Architecture}\label{sec:00-Overview__architecture-diagrams:system-architecture}}
 
-User → Frontend SPA → DefendX Backend → Security Tools → Database
+Figure~\ref{fig:system-architecture-overview} summarizes the high-level DefendX architecture and core service interactions.
 
 The frontend communicates with the backend exclusively via HTTPS. All authentication and authorization occur in the backend.
 
